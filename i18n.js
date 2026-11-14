@@ -114,8 +114,11 @@
       'index.statsAria': 'Live Catalog Numbers',
       'index.statSites': 'Sites in catalog',
       'index.statDocumented': 'Documented sites',
+      'index.statScanCandidates': 'Scan candidates',
       'index.statParams': 'Parameters with data',
       'index.statSources': 'Cited sources',
+      'globalScan.title': 'Global scan',
+      'globalScan.body': 'We scanned <span class="scan-count-inline">{count}</span> regions of the world with the same climate method to look for candidates outside the known catalog. They are hypotheses based on climate only.',
       'index.challengeTitle': 'The challenge',
       'index.challengeBody': 'Before launching rovers, drills, habitats, or power hardware to permanent lunar bases or Mars, engineering teams need terrestrial field sites that stress equipment under realistic temperatures, aridity, and terrain. Finding the right testbed is difficult because published analog studies are scattered across decades of papers, and no single Earth location replicates every physical condition of another world.',
       'index.howTitle': 'How it works',
@@ -167,6 +170,7 @@
       'map.resetFilters': 'Reset map filters',
       'map.legendDoc': 'Documented analogs ({n})',
       'map.legendClimate': 'Climate data only ({n})',
+      'map.legendDiscovery': 'Global scan candidates ({n})',
       'map.selectSiteTitle': 'Select a site',
       'map.selectSiteDesc': 'Click any blue (documented) or gray (climate-only) marker on the map to view its parameters, simulated targets, strengths and weaknesses, and limits.',
       'map.tableTitle': 'Site coordinates and elevation',
@@ -179,10 +183,13 @@
       'map.colAction': 'Action',
       'map.badgeDoc': 'Documented',
       'map.badgeClimate': 'Climate only',
+      'map.badgeDiscovery': 'Scan candidate',
       'map.btnInspect': 'Inspect',
       'map.tooltipDoc': 'Documented analog',
       'map.tooltipClimate': 'Climate data only',
+      'map.tooltipDiscovery': 'Discovery candidate (climate only)',
       'map.panelClimateBadge': 'Climate data only: no literature source yet',
+      'map.panelDiscoveryBadge': 'Discovery candidate from the global scan: climate data only, no literature yet',
       'map.panelCloseAria': 'Close details panel',
       'map.coordNotice': 'All coordinates are approximate (regional / grid-cell center).',
       'map.docAnalogFor': 'Documented analog for',
@@ -255,6 +262,14 @@
       'finder.showingCountSingular': 'Showing <strong>{n}</strong> matching site',
       'finder.showingCountPlural': 'Showing <strong>{n}</strong> matching sites',
       'finder.scoredMeta': '{showing} (scored across <strong>{pool}</strong>-site pool) for <em>{target}</em> &bull; <em>{profile}</em>.',
+      'finder.splitScoredMeta': 'Showing <strong>{docShown}</strong> documented analogs and <strong>{discShown}</strong> discovery candidates (scored across <strong>{pool}</strong>-site pool) for <em>{target}</em> &bull; <em>{profile}</em>.',
+      'finder.sectionDocTitle': 'Documented analogs',
+      'finder.sectionDocMeta': 'Top 5 of Tier A ({total} matching)',
+      'finder.sectionDocEmpty': 'No Tier A documented analogs match this target and the active filters.',
+      'finder.sectionDiscoveryKicker': 'Discovery candidates from the global scan',
+      'finder.sectionDiscoveryTitle': 'Hypotheses to validate, not recommendations',
+      'finder.sectionDiscoveryMeta': 'Top 5 global-scan sites ({total} matching, scored across all {pool} sites)',
+      'finder.sectionDiscoveryEmpty': 'No discovery candidates from the global scan match the active logistics filters.',
       'finder.emptyTitle': 'No candidate sites match these logistics filters.',
       'finder.emptyDesc': 'All {pool} sites in the selected pool were excluded by the active logistics restrictions. Try clearing one or more filters or enabling “Include climate-only sites”.',
       'finder.clearFilters': 'Clear logistics filters',
@@ -265,6 +280,7 @@
       'finder.flagProtected': 'Protected area',
       'finder.flagAccessNote': 'Access note',
       'finder.flagClimateOnly': 'Climate-only candidate',
+      'finder.flagDiscovery': 'Discovery candidate (global scan)',
       'finder.dirLowerArrow': '↓ lower is closer',
       'finder.dirHigherArrow': '↑ higher is closer',
       'finder.breakdownSummary': 'Parameter breakdown ({n} active factors)',
@@ -320,6 +336,7 @@
       'csv.warnings': 'Warnings',
       'csv.target': 'Target',
       'csv.profile': 'Profile',
+      'csv.section': 'Result Section',
       'csv.yes': 'Yes',
       'csv.no': 'No',
 
@@ -329,14 +346,16 @@
       'methods.kicker': 'Methods and limits',
       'methods.title': 'Scoring method and limits',
       'methods.desc': 'How Speculum compares analog sites without inventing missing measurements, how confidence affects weights, and where Earth analogs fall short of the Moon and Mars.',
+      'methods.docCountLabel': 'Documented sites',
+      'methods.scanCountLabel': 'Scan candidates',
       'methods.s1Title': '1. Scoring method',
       'methods.s1Intro': 'No place on Earth matches the absolute climate of the Moon or Mars: Earth is warmer, wetter, and wrapped in a dense atmosphere. Measuring raw distance to Martian or lunar numbers would make almost every Earth site look equally far away. Instead, Speculum ranks the Earth sites <strong>against each other</strong> in the direction that moves closer to your chosen target.',
       'methods.stepHeading': 'Step-by-step calculation',
-      'methods.step1': '<strong>Choose the comparison pool:</strong> By default, the pool is the <span id="method-doc-count">{docCount}</span> documented sites. If you check <em>Include climate-only sites</em> on the calculator, all <span id="method-all-count">{allCount}</span> sites enter the pool. Percentile ranks are always computed across this pool <em>before</em> logistics filters hide any sites.',
+      'methods.step1': '<strong>Choose the comparison pool:</strong> By default, the pool is the <span id="method-doc-count">{docCount}</span> documented sites. If you check <em>Include climate-only sites</em> on the calculator, the full catalog (<span id="method-all-count">{allCount}</span> sites total, including the <span id="method-scan-count">{scanCount}</span> global-scan candidates) enters the pool. Percentile ranks are always computed across this pool <em>before</em> logistics filters hide any sites.',
       'methods.step2': '<strong>Rank each active parameter in the target\'s direction:</strong> For every parameter used by the target that has site data, take all typical numeric values in the pool (count = <code>n</code>) and compute each site\'s percentile rank between 0 and 1:<div class="formula-box">rank = (number of smaller values + (number of equal values - 1) / 2) / (n - 1)</div>If the target favors a <strong>higher</strong> value (such as daily temperature swing or UV radiation), similarity is <code>sim = rank</code>. If the target favors a <strong>lower</strong> value (such as temperature, pressure, or precipitation), similarity is <code>sim = 1 - rank</code>.',
       'methods.step3': '<strong>Multiply by mission weight and confidence:</strong> Each parameter gets a weight <code>w</code> from 0 to 5 (prefilled from the profile you chose, or 1 if the profile does not list that parameter). Parameters with weight 0 or without site data are skipped. Each measured value also has a confidence multiplier <code>m</code> (<span id="mult-high">{high}</span> for high, <span id="mult-med">{med}</span> for medium, <span id="mult-low">{low}</span> for low).',
       'methods.step4': '<strong>Compute score and coverage:</strong><div class="formula-box">Score = 100 * sum(w * m * sim) / sum(w * m)   (over parameters the site has)<br />Coverage = 100 * sum(w of parameters the site has) / sum(w of all target parameters)</div>A low score does not mean a site is useless; a low coverage percentage warns that key parameters lacked measurements at that site.',
-      'methods.step5': '<strong>Filter and sort into two tiers:</strong> Logistics filters (support station, protected area, access problems) hide ineligible sites after scoring. Remaining sites are grouped into <strong>Tier A</strong> (<em>Documented analog of this target</em>) first, then <strong>Tier B</strong> (<em>Similar climate, no documented analog</em>), each sorted from highest score to lowest.',
+      'methods.step5': '<strong>Filter and sort into two tiers (or split discovery results):</strong> Logistics filters (support station, protected area, access problems) hide ineligible sites after scoring. By default, sites are grouped into <strong>Tier A</strong> (<em>Documented analog of this target</em>) first, then <strong>Tier B</strong> (<em>Similar climate, no documented analog</em>). When <em>Include climate-only sites</em> is enabled, results are split into <em>Documented analogs</em> (top 5 of Tier A) and <em>Discovery candidates from the global scan</em> (top 5 global-scan sites, regardless of tier).',
       'methods.workedTitle': 'Worked example: Mars Desert Research Station (MDRS) for Mars · equatorial regions and Wheeled rover',
       'methods.workedColParam': 'Parameter and direction',
       'methods.workedColVal': 'MDRS value',
@@ -450,8 +469,11 @@
       'index.statsAria': 'Cifras en vivo del catálogo',
       'index.statSites': 'Sitios en el catálogo',
       'index.statDocumented': 'Sitios documentados',
+      'index.statScanCandidates': 'Candidatos del barrido',
       'index.statParams': 'Parámetros con datos',
       'index.statSources': 'Fuentes citadas',
+      'globalScan.title': 'Barrido global',
+      'globalScan.body': 'Examinamos <span class="scan-count-inline">{count}</span> regiones del mundo con el mismo método climático para buscar candidatos fuera del catálogo conocido. Son hipótesis basadas únicamente en el clima.',
       'index.challengeTitle': 'El desafío',
       'index.challengeBody': 'Antes de lanzar róveres, perforadoras, hábitats o sistemas de energía hacia bases lunares permanentes o Marte, los equipos de ingeniería necesitan sitios de campo en la Tierra que pongan a prueba los equipos bajo temperaturas, aridez y terrenos realistas. Encontrar el banco de pruebas adecuado es difícil porque los estudios publicados están dispersos en décadas de artículos y ningún lugar terrestre reproduce todas las condiciones físicas de otro mundo.',
       'index.howTitle': 'Cómo funciona',
@@ -502,6 +524,7 @@
       'map.resetFilters': 'Restablecer filtros del mapa',
       'map.legendDoc': 'Análogos documentados ({n})',
       'map.legendClimate': 'Solo datos climáticos ({n})',
+      'map.legendDiscovery': 'Candidatos del barrido global ({n})',
       'map.selectSiteTitle': 'Selecciona un sitio',
       'map.selectSiteDesc': 'Haz clic en cualquier marcador azul (documentado) o gris (solo clima) del mapa para ver sus parámetros, objetivos simulados, fortalezas, debilidades y límites.',
       'map.tableTitle': 'Coordenadas y elevación de los sitios',
@@ -514,10 +537,13 @@
       'map.colAction': 'Acción',
       'map.badgeDoc': 'Documentado',
       'map.badgeClimate': 'Solo clima',
+      'map.badgeDiscovery': 'Candidato del barrido',
       'map.btnInspect': 'Inspeccionar',
       'map.tooltipDoc': 'Análogo documentado',
       'map.tooltipClimate': 'Solo datos climáticos',
+      'map.tooltipDiscovery': 'Candidato de descubrimiento (solo clima)',
       'map.panelClimateBadge': 'Solo datos climáticos: aún sin fuente bibliográfica',
+      'map.panelDiscoveryBadge': 'Candidato de descubrimiento del barrido global: solo datos climáticos, aún sin literatura',
       'map.panelCloseAria': 'Cerrar panel de detalles',
       'map.coordNotice': 'Todas las coordenadas son aproximadas (centro regional / celda de cuadrícula).',
       'map.docAnalogFor': 'Análogo documentado para',
@@ -589,6 +615,14 @@
       'finder.showingCountSingular': 'Mostrando <strong>{n}</strong> sitio coincidente',
       'finder.showingCountPlural': 'Mostrando <strong>{n}</strong> sitios coincidentes',
       'finder.scoredMeta': '{showing} (puntuados en un grupo de <strong>{pool}</strong> sitios) para <em>{target}</em> &bull; <em>{profile}</em>.',
+      'finder.splitScoredMeta': 'Mostrando <strong>{docShown}</strong> análogos documentados y <strong>{discShown}</strong> candidatos de descubrimiento (puntuados en un grupo de <strong>{pool}</strong> sitios) para <em>{target}</em> &bull; <em>{profile}</em>.',
+      'finder.sectionDocTitle': 'Análogos documentados',
+      'finder.sectionDocMeta': 'Los 5 mejores de Nivel A ({total} coincidentes)',
+      'finder.sectionDocEmpty': 'Ningún análogo documentado de Nivel A coincide con este objetivo y los filtros activos.',
+      'finder.sectionDiscoveryKicker': 'Candidatos de descubrimiento del barrido global',
+      'finder.sectionDiscoveryTitle': 'Hipótesis por validar, no recomendaciones',
+      'finder.sectionDiscoveryMeta': 'Los 5 mejores sitios del barrido global ({total} coincidentes, puntuados entre los {pool} sitios)',
+      'finder.sectionDiscoveryEmpty': 'Ningún candidato de descubrimiento del barrido global cumple los filtros logísticos activos.',
       'finder.emptyTitle': 'Ningún sitio candidato cumple con estos filtros logísticos.',
       'finder.emptyDesc': 'Los {pool} sitios del grupo seleccionado quedaron excluidos por las restricciones logísticas activas. Prueba limpiar uno o más filtros o activar “Incluir sitios solo climáticos”.',
       'finder.clearFilters': 'Limpiar filtros logísticos',
@@ -599,6 +633,7 @@
       'finder.flagProtected': 'Área protegida',
       'finder.flagAccessNote': 'Nota de acceso',
       'finder.flagClimateOnly': 'Candidato solo climático',
+      'finder.flagDiscovery': 'Candidato de descubrimiento (barrido global)',
       'finder.dirLowerArrow': '↓ menor es más cercano',
       'finder.dirHigherArrow': '↑ mayor es más cercano',
       'finder.breakdownSummary': 'Desglose de parámetros ({n} factores activos)',
@@ -652,6 +687,7 @@
       'csv.warnings': 'Advertencias',
       'csv.target': 'Objetivo',
       'csv.profile': 'Perfil',
+      'csv.section': 'Sección del resultado',
       'csv.yes': 'Sí',
       'csv.no': 'No',
 
@@ -660,14 +696,16 @@
       'methods.kicker': 'Métodos y límites',
       'methods.title': 'Método de puntuación y límites',
       'methods.desc': 'Cómo compara Speculum los sitios análogos sin inventar mediciones faltantes, cómo afecta la confianza a los pesos y dónde los análogos terrestres quedan por debajo de la Luna y Marte.',
+      'methods.docCountLabel': 'Sitios documentados',
+      'methods.scanCountLabel': 'Candidatos del barrido',
       'methods.s1Title': '1. Método de puntuación',
       'methods.s1Intro': 'Ningún lugar de la Tierra iguala el clima absoluto de la Luna o Marte: la Tierra es más cálida, más húmeda y está envuelta en una atmósfera densa. Medir la distancia bruta respecto a cifras marcianas o lunares haría que casi todos los sitios terrestres parecieran igualmente lejanos. En su lugar, Speculum clasifica los sitios terrestres <strong>entre sí</strong> en la dirección que se acerca al objetivo elegido.',
       'methods.stepHeading': 'Cálculo paso a paso',
-      'methods.step1': '<strong>Elegir el grupo de comparación:</strong> Por defecto, el grupo son los <span id="method-doc-count">{docCount}</span> sitios documentados. Si marcas <em>Incluir sitios solo climáticos</em> en la calculadora, los <span id="method-all-count">{allCount}</span> sitios entran al grupo. Los rangos percentiles siempre se calculan sobre este grupo <em>antes</em> de que los filtros logísticos oculten sitios.',
+      'methods.step1': '<strong>Elegir el grupo de comparación:</strong> Por defecto, el grupo son los <span id="method-doc-count">{docCount}</span> sitios documentados. Si marcas <em>Incluir sitios solo climáticos</em> en la calculadora, el catálogo completo (<span id="method-all-count">{allCount}</span> sitios en total, incluidos los <span id="method-scan-count">{scanCount}</span> candidatos del barrido global) entra al grupo. Los rangos percentiles siempre se calculan sobre este grupo <em>antes</em> de que los filtros logísticos oculten sitios.',
       'methods.step2': '<strong>Clasificar cada parámetro activo en la dirección del objetivo:</strong> Para cada parámetro usado por el objetivo que tenga datos del sitio, toma todos los valores numéricos típicos del grupo (cantidad = <code>n</code>) y calcula el rango percentil de cada sitio entre 0 y 1:<div class="formula-box">rank = (cantidad de valores menores + (cantidad de valores iguales - 1) / 2) / (n - 1)</div>Si el objetivo favorece un valor <strong>mayor</strong> (como amplitud térmica diaria o radiación UV), la similitud es <code>sim = rank</code>. Si el objetivo favorece un valor <strong>menor</strong> (como temperatura, presión o precipitación), la similitud es <code>sim = 1 - rank</code>.',
       'methods.step3': '<strong>Multiplicar por peso de misión y confianza:</strong> Cada parámetro recibe un peso <code>w</code> de 0 a 5 (precargado del perfil elegido, o 1 si el perfil no incluye ese parámetro). Se omiten los parámetros con peso 0 o sin datos. Cada medición también tiene un multiplicador de confianza <code>m</code> (<span id="mult-high">{high}</span> para alta, <span id="mult-med">{med}</span> para media, <span id="mult-low">{low}</span> para baja).',
       'methods.step4': '<strong>Calcular puntuación y cobertura:</strong><div class="formula-box">Score = 100 * sum(w * m * sim) / sum(w * m)   (sobre parámetros que tiene el sitio)<br />Coverage = 100 * sum(w de parámetros que tiene el sitio) / sum(w de todos los parámetros del objetivo)</div>Una puntuación baja no significa que un sitio sea inútil; un porcentaje de cobertura bajo advierte que faltan mediciones clave en ese sitio.',
-      'methods.step5': '<strong>Filtrar y ordenar en dos niveles:</strong> Los filtros logísticos (estación de apoyo, área protegida, problemas de acceso) ocultan sitios no elegibles después de puntuar. Los sitios restantes se agrupan primero en <strong>Nivel A</strong> (<em>Análogo documentado de este objetivo</em>) y luego en <strong>Nivel B</strong> (<em>Clima similar, sin análogo documentado</em>), ordenados de mayor a menor puntuación.',
+      'methods.step5': '<strong>Filtrar y ordenar en dos niveles (o dividir resultados de descubrimiento):</strong> Los filtros logísticos (estación de apoyo, área protegida, problemas de acceso) ocultan sitios no elegibles después de puntuar. Por defecto, los sitios se agrupan primero en <strong>Nivel A</strong> (<em>Análogo documentado de este objetivo</em>) y luego en <strong>Nivel B</strong> (<em>Clima similar, sin análogo documentado</em>). Cuando <em>Incluir sitios solo climáticos</em> está activo, los resultados se dividen en <em>Análogos documentados</em> (top 5 de Nivel A) y <em>Candidatos de descubrimiento del barrido global</em> (top 5 del barrido global, sin importar el nivel).',
       'methods.workedTitle': 'Ejemplo práctico: Mars Desert Research Station (MDRS) para Marte · regiones ecuatoriales y Róver con ruedas',
       'methods.workedColParam': 'Parámetro y dirección',
       'methods.workedColVal': 'Valor en MDRS',
@@ -781,8 +819,11 @@
       'index.statsAria': 'Números ao vivo do catálogo',
       'index.statSites': 'Locais no catálogo',
       'index.statDocumented': 'Locais documentados',
+      'index.statScanCandidates': 'Candidatos da varredura',
       'index.statParams': 'Parâmetros com dados',
       'index.statSources': 'Fontes citadas',
+      'globalScan.title': 'Varredura global',
+      'globalScan.body': 'Analisamos <span class="scan-count-inline">{count}</span> regiões do mundo com o mesmo método climático para buscar candidatos fora do catálogo conhecido. São hipóteses baseadas apenas no clima.',
       'index.challengeTitle': 'O desafio',
       'index.challengeBody': 'Antes de lançar rovers, perfuratrizes, habitats ou equipamentos de energia para bases lunares permanentes ou Marte, as equipes de engenharia precisam de campos de teste terrestres que submetam os equipamentos a temperaturas, aridez e terrenos realistas. Encontrar o campo de provas ideal é difícil porque os estudos publicados estão espalhados por décadas de artigos e nenhum local na Terra reproduz todas as condições físicas de outro mundo.',
       'index.howTitle': 'Como funciona',
@@ -833,6 +874,7 @@
       'map.resetFilters': 'Redefinir filtros do mapa',
       'map.legendDoc': 'Análogos documentados ({n})',
       'map.legendClimate': 'Apenas dados climáticos ({n})',
+      'map.legendDiscovery': 'Candidatos da varredura global ({n})',
       'map.selectSiteTitle': 'Selecione um local',
       'map.selectSiteDesc': 'Clique em qualquer marcador azul (documentado) ou cinza (apenas clima) no mapa para ver parâmetros, alvos simulados, pontos fortes e fracos e limites.',
       'map.tableTitle': 'Coordenadas e altitude dos locais',
@@ -845,10 +887,13 @@
       'map.colAction': 'Ação',
       'map.badgeDoc': 'Documentado',
       'map.badgeClimate': 'Apenas clima',
+      'map.badgeDiscovery': 'Candidato da varredura',
       'map.btnInspect': 'Inspecionar',
       'map.tooltipDoc': 'Análogo documentado',
       'map.tooltipClimate': 'Apenas dados climáticos',
+      'map.tooltipDiscovery': 'Candidato de descoberta (apenas clima)',
       'map.panelClimateBadge': 'Apenas dados climáticos: ainda sem fonte bibliográfica',
+      'map.panelDiscoveryBadge': 'Candidato de descoberta da varredura global: apenas dados climáticos, ainda sem literatura',
       'map.panelCloseAria': 'Fechar painel de detalhes',
       'map.coordNotice': 'Todas as coordenadas são aproximadas (centro regional / célula da grade).',
       'map.docAnalogFor': 'Análogo documentado para',
@@ -920,6 +965,14 @@
       'finder.showingCountSingular': 'Mostrando <strong>{n}</strong> local correspondente',
       'finder.showingCountPlural': 'Mostrando <strong>{n}</strong> locais correspondentes',
       'finder.scoredMeta': '{showing} (pontuados em um conjunto de <strong>{pool}</strong> locais) para <em>{target}</em> &bull; <em>{profile}</em>.',
+      'finder.splitScoredMeta': 'Mostrando <strong>{docShown}</strong> análogos documentados e <strong>{discShown}</strong> candidatos de descoberta (pontuados em um conjunto de <strong>{pool}</strong> locais) para <em>{target}</em> &bull; <em>{profile}</em>.',
+      'finder.sectionDocTitle': 'Análogos documentados',
+      'finder.sectionDocMeta': 'Top 5 do Nível A ({total} correspondentes)',
+      'finder.sectionDocEmpty': 'Nenhum análogo documentado de Nível A corresponde a este alvo e aos filtros ativos.',
+      'finder.sectionDiscoveryKicker': 'Candidatos de descoberta da varredura global',
+      'finder.sectionDiscoveryTitle': 'Hipóteses a validar, não recomendações',
+      'finder.sectionDiscoveryMeta': 'Top 5 locais da varredura global ({total} correspondentes, pontuados entre todos os {pool} locais)',
+      'finder.sectionDiscoveryEmpty': 'Nenhum candidato de descoberta da varredura global atende aos filtros logísticos ativos.',
       'finder.emptyTitle': 'Nenhum local candidato atende a esses filtros logísticos.',
       'finder.emptyDesc': 'Todos os {pool} locais do conjunto selecionado foram excluídos pelas restrições logísticas ativas. Tente limpar um ou mais filtros ou ativar “Incluir locais apenas climáticos”.',
       'finder.clearFilters': 'Limpar filtros logísticos',
@@ -930,6 +983,7 @@
       'finder.flagProtected': 'Área protegida',
       'finder.flagAccessNote': 'Nota de acesso',
       'finder.flagClimateOnly': 'Candidato apenas climático',
+      'finder.flagDiscovery': 'Candidato de descoberta (varredura global)',
       'finder.dirLowerArrow': '↓ menor é mais próximo',
       'finder.dirHigherArrow': '↑ maior é mais próximo',
       'finder.breakdownSummary': 'Detalhamento de parâmetros ({n} fatores ativos)',
@@ -983,6 +1037,7 @@
       'csv.warnings': 'Alertas',
       'csv.target': 'Alvo',
       'csv.profile': 'Perfil',
+      'csv.section': 'Seção do resultado',
       'csv.yes': 'Sim',
       'csv.no': 'Não',
 
@@ -991,14 +1046,16 @@
       'methods.kicker': 'Métodos e limites',
       'methods.title': 'Método de pontuação e limites',
       'methods.desc': 'Como o Speculum compara locais análogos sem inventar medições ausentes, como a confiança afeta os pesos e onde os análogos terrestres ficam aquém da Lua e de Marte.',
+      'methods.docCountLabel': 'Locais documentados',
+      'methods.scanCountLabel': 'Candidatos da varredura',
       'methods.s1Title': '1. Método de pontuação',
       'methods.s1Intro': 'Nenhum lugar na Terra corresponde ao clima absoluto da Lua ou de Marte: a Terra é mais quente, mais úmida e envolvida por uma atmosfera densa. Medir a distância bruta até valores marcianos ou lunares faria quase todos os locais terrestres parecerem igualmente distantes. Em vez disso, o Speculum ranqueia os locais da Terra <strong>entre si</strong> na direção que se aproxima do alvo escolhido.',
       'methods.stepHeading': 'Cálculo passo a passo',
-      'methods.step1': '<strong>Escolher o conjunto de comparação:</strong> Por padrão, o conjunto reúne os <span id="method-doc-count">{docCount}</span> locais documentados. Se você marcar <em>Incluir locais apenas climáticos</em> na calculadora, todos os <span id="method-all-count">{allCount}</span> locais entram no conjunto. Os percentis são sempre calculados sobre esse conjunto <em>antes</em> de os filtros logísticos ocultarem locais.',
+      'methods.step1': '<strong>Escolher o conjunto de comparação:</strong> Por padrão, o conjunto reúne os <span id="method-doc-count">{docCount}</span> locais documentados. Se você marcar <em>Incluir locais apenas climáticos</em> na calculadora, o catálogo completo (<span id="method-all-count">{allCount}</span> locais no total, incluindo os <span id="method-scan-count">{scanCount}</span> candidatos da varredura global) entra no conjunto. Os percentis são sempre calculados sobre esse conjunto <em>antes</em> de os filtros logísticos ocultarem locais.',
       'methods.step2': '<strong>Ranquear cada parâmetro ativo na direção do alvo:</strong> Para cada parâmetro usado pelo alvo que tenha dados no local, pegue todos os valores numéricos típicos do conjunto (total = <code>n</code>) e calcule o percentil de cada local entre 0 e 1:<div class="formula-box">rank = (quantidade de valores menores + (quantidade de valores iguais - 1) / 2) / (n - 1)</div>Se o alvo favorece um valor <strong>maior</strong> (como amplitude térmica diária ou radiação UV), a similaridade é <code>sim = rank</code>. Se o alvo favorece um valor <strong>menor</strong> (como temperatura, pressão ou precipitação), a similaridade é <code>sim = 1 - rank</code>.',
       'methods.step3': '<strong>Multiplicar pelo peso da missão e pela confiança:</strong> Cada parâmetro recebe um peso <code>w</code> de 0 a 5 (preenchido pelo perfil escolhido, ou 1 se o perfil não listar esse parâmetro). Parâmetros com peso 0 ou sem dados são ignorados. Cada medição também tem um multiplicador de confiança <code>m</code> (<span id="mult-high">{high}</span> para alta, <span id="mult-med">{med}</span> para média, <span id="mult-low">{low}</span> para baixa).',
       'methods.step4': '<strong>Calcular pontuação e cobertura:</strong><div class="formula-box">Score = 100 * sum(w * m * sim) / sum(w * m)   (sobre os parâmetros que o local possui)<br />Coverage = 100 * sum(w dos parâmetros que o local possui) / sum(w de todos os parâmetros do alvo)</div>Uma pontuação baixa não significa que um local seja inútil; uma porcentagem de cobertura baixa alerta que faltaram medições de parâmetros-chave nesse local.',
-      'methods.step5': '<strong>Filtrar e ordenar em dois níveis:</strong> Filtros logísticos (estação de apoio, área protegida, problemas de acesso) ocultam locais inelegíveis após a pontuação. Os locais restantes são agrupados em <strong>Nível A</strong> (<em>Análogo documentado deste alvo</em>) primeiro e depois em <strong>Nível B</strong> (<em>Clima semelhante, sem análogo documentado</em>), ordenados da maior para a menor pontuação.',
+      'methods.step5': '<strong>Filtrar e ordenar em dois níveis (ou dividir resultados de descoberta):</strong> Filtros logísticos (estação de apoio, área protegida, problemas de acesso) ocultam locais inelegíveis após a pontuação. Por padrão, os locais são agrupados em <strong>Nível A</strong> (<em>Análogo documentado deste alvo</em>) primeiro e depois em <strong>Nível B</strong> (<em>Clima semelhante, sem análogo documentado</em>). Quando <em>Incluir locais apenas climáticos</em> está marcado, os resultados são divididos em <em>Análogos documentados</em> (top 5 do Nível A) e <em>Candidatos de descoberta da varredura global</em> (top 5 locais da varredura global, independentemente do nível).',
       'methods.workedTitle': 'Exemplo prático: Mars Desert Research Station (MDRS) para Marte · regiões equatoriais e Rover com rodas',
       'methods.workedColParam': 'Parâmetro e direção',
       'methods.workedColVal': 'Valor na MDRS',
@@ -2015,10 +2072,24 @@
     return site.summary || '';
   }
 
+  const SHARED_ACCESS_NOTES = {
+    es: {
+      'Remote polar location: expedition-level logistics (general knowledge, not verified for this exact point).':
+        'Ubicación polar remota: logística de nivel de expedición (conocimiento general, no verificado para este punto exacto).'
+    },
+    'pt-BR': {
+      'Remote polar location: expedition-level logistics (general knowledge, not verified for this exact point).':
+        'Localização polar remota: logística em nível de expedição (conhecimento geral, não verificado para este ponto exato).'
+    }
+  };
+
   function tAccessNote(site) {
     if (!site || !site.flags || !site.flags.access_note) return '';
     const map = ACCESS_NOTES[activeLang];
-    return (map && map[site.id]) || site.flags.access_note;
+    if (map && map[site.id]) return map[site.id];
+    const shared = SHARED_ACCESS_NOTES[activeLang];
+    if (shared && shared[site.flags.access_note]) return shared[site.flags.access_note];
+    return site.flags.access_note;
   }
 
   function tUniversalLimit(limitText) {
@@ -2260,10 +2331,16 @@
       if (dataParamsCount && el.contains(dataParamsCount)) {
         vars.count = dataParamsCount.textContent || '29';
       }
+      const scanInlineEl = el.querySelector('.scan-count-inline');
+      if (scanInlineEl) {
+        vars.count = scanInlineEl.textContent || '61';
+      }
       const docCountEl = doc.getElementById('method-doc-count');
       const allCountEl = doc.getElementById('method-all-count');
+      const scanCountEl = doc.getElementById('method-scan-count');
       if (docCountEl && el.contains(docCountEl)) vars.docCount = docCountEl.textContent || '23';
       if (allCountEl && el.contains(allCountEl)) vars.allCount = allCountEl.textContent || '89';
+      if (scanCountEl && el.contains(scanCountEl)) vars.scanCount = scanCountEl.textContent || '61';
       const mh = doc.getElementById('mult-high');
       const mm = doc.getElementById('mult-med');
       const ml = doc.getElementById('mult-low');

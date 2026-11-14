@@ -463,7 +463,9 @@
             pills.push(`<span class="flag-pill flag-pill-access">${App.escapeHtml(tr('finder.flagAccessNote', null, 'Access note'))}</span>`);
           }
 
-          if (site.evidence_level === 'climate_only') {
+          if (site.discovery) {
+            pills.push(`<span class="flag-pill flag-pill-discovery">${App.escapeHtml(tr('finder.flagDiscovery', null, 'Discovery candidate (global scan)'))}</span>`);
+          } else if (site.evidence_level === 'climate_only') {
             pills.push(`<span class="flag-pill flag-pill-climate">${App.escapeHtml(tr('finder.flagClimateOnly', null, 'Climate-only candidate'))}</span>`);
           }
 
@@ -505,6 +507,187 @@
           `;
         }
 
+        function renderRankedCard(item, rankNum, tObj, idPrefix) {
+          const site = item.siteDef;
+          const cardId = `${idPrefix || 'rank'}-${rankNum}-title`;
+          const tierClass = site.discovery
+            ? 'discovery-card'
+            : (item.tier === 'A' ? 'tier-a-card' : 'tier-b-card');
+          const tierBadge = App.renderTierBadge(item.tier);
+          const flagsHtml = renderFlagsRow(site);
+          const warningsHtml = renderWarnings(item.warnings);
+
+          const sourcesHtml = (site.source_ids || []).map(sId => {
+            return App.renderSourceLink(sId, data.sources);
+          }).join(' ');
+
+          const breakdownRows = (item.paramBreakdown || []).map(param => {
+            const confBadge = App.renderConfidenceBadge(param.confidence);
+            const dirArrow = param.direction === 'lower'
+              ? tr('finder.dirLowerArrow', null, '↓ lower is closer')
+              : tr('finder.dirHigherArrow', null, '↑ higher is closer');
+            return `
+              <tr>
+                <td>
+                  <strong>${App.escapeHtml(param.name)}</strong>
+                  <span style="font-size: 0.72rem; color: var(--text-muted); display: block;">${App.escapeHtml(dirArrow)}</span>
+                </td>
+                <td class="mono" style="text-align: right;">${App.escapeHtml(param.valueStr)}</td>
+                <td class="mono" style="text-align: right; color: var(--accent); font-weight: 600;">${param.percentileScore.toFixed(1)}%</td>
+                <td class="mono" style="text-align: right;">${param.weight}</td>
+                <td style="text-align: right;">${confBadge}</td>
+              </tr>
+            `;
+          }).join('');
+
+          const targetBody = tObj ? tObj.body : '';
+          const bodyName = I18n ? I18n.tBody(targetBody) : (targetBody ? targetBody.charAt(0).toUpperCase() + targetBody.slice(1) : '');
+          const hasBodyRef = Boolean(targetBody && data.body_references && data.body_references[targetBody]);
+          const bodyGaps = App.computeAnalogyGaps
+            ? App.computeAnalogyGaps(site, data, hasBodyRef ? [targetBody] : [])
+            : { gravityLine: '', bodies: [] };
+          const bodyGapEntry = bodyGaps.bodies[0] || null;
+          const compactBreaksDownHtml = `
+            <div class="finder-breaks-down">
+              <div class="finder-breaks-down-header">
+                <span>${App.escapeHtml(tr('finder.breaksDownTitle', { body: bodyName }, `Where the analogy breaks down (${bodyName})`))}</span>
+                ${bodyGapEntry && bodyGapEntry.sourceId ? App.renderSourceLink(bodyGapEntry.sourceId, data.sources) : ''}
+              </div>
+              ${bodyGapEntry && bodyGapEntry.items.length ? `
+                <div class="finder-breaks-down-list">
+                  ${bodyGapEntry.items.map(it => `
+                    <div class="finder-breaks-down-row">
+                      <div>
+                        <strong>${App.escapeHtml(it.parameterName)}</strong>
+                        <span class="finder-breaks-down-vals"> &mdash; ${App.escapeHtml(tr('finder.sitePrefix', null, 'Site:'))} <span class="mono">${App.escapeHtml(it.siteValueStr)}</span>, ${App.escapeHtml(tr('finder.refPrefix', null, 'Ref:'))} <span class="mono">${App.escapeHtml(it.refValueShort)}</span></span>
+                      </div>
+                      <div class="finder-breaks-down-gap">${App.escapeHtml(it.gapText)}</div>
+                    </div>
+                  `).join('')}
+                </div>
+              ` : (targetBody === 'europa'
+                ? `<p class="finder-breaks-down-gravity" style="margin-bottom: 6px;">${App.escapeHtml(tr('finder.breaksDownEuropaNote', null, 'Reference fact-sheet comparisons cover Moon and Mars; for Europa, Earth glaciers only partially approximate ice-shell cold.'))}</p>`
+                : `<p class="finder-breaks-down-gravity" style="margin-bottom: 6px;">${App.escapeHtml(tr('map.breaksDownNoMatch', null, 'None of the reference parameters for this body are recorded at this site.'))}</p>`
+              )}
+              ${bodyGaps.gravityLine ? `<p class="finder-breaks-down-gravity">${App.escapeHtml(bodyGaps.gravityLine)}</p>` : ''}
+            </div>
+          `;
+
+          const breakdownSection = item.paramBreakdown.length > 0
+            ? `
+              <details class="breakdown-details">
+                <summary class="breakdown-summary">
+                  ${App.escapeHtml(tr('finder.breakdownSummary', { n: item.paramBreakdown.length }, `Parameter breakdown (${item.paramBreakdown.length} active factors)`))}
+                </summary>
+                <div class="breakdown-table-wrap">
+                  <table class="breakdown-table" aria-label="${App.escapeHtml(tr('finder.colParam', null, 'Parameter breakdown'))}">
+                    <thead>
+                      <tr>
+                        <th scope="col">${App.escapeHtml(tr('finder.colParam', null, 'Parameter'))}</th>
+                        <th scope="col" style="text-align: right;">${App.escapeHtml(tr('finder.colSiteVal', null, 'Site value'))}</th>
+                        <th scope="col" style="text-align: right;">${App.escapeHtml(tr('finder.colSimilarity', null, 'Similarity'))}</th>
+                        <th scope="col" style="text-align: right;">${App.escapeHtml(tr('finder.colWeight', null, 'Weight'))}</th>
+                        <th scope="col" style="text-align: right;">${App.escapeHtml(tr('finder.colConfidence', null, 'Confidence'))}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${breakdownRows}
+                    </tbody>
+                  </table>
+                </div>
+                ${compactBreaksDownHtml}
+              </details>
+            `
+            : `
+              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">
+                ${App.escapeHtml(tr('finder.noBreakdown', null, 'No weighted target parameters with available site measurements (all active weights may be 0).'))}
+              </div>
+            `;
+
+          const countryStr = I18n ? I18n.tCountry(site.country) : site.country;
+          const regionStr = site.region ? (I18n ? I18n.tRegion(site.region) : site.region) : '';
+          const summaryText = I18n ? I18n.tSiteSummary(site) : (site.summary || '');
+
+          return `
+            <article class="ranked-card ${tierClass}" aria-labelledby="${App.escapeHtml(cardId)}">
+              <div class="ranked-header">
+                <div class="ranked-rank-wrap">
+                  <span class="ranked-num">#${rankNum}</span>
+                  <div>
+                    <h3 id="${App.escapeHtml(cardId)}" class="ranked-title">${App.escapeHtml(site.name)}</h3>
+                    <div style="font-size: 0.85rem; color: var(--text-secondary);">
+                      ${App.escapeHtml(countryStr)}${regionStr ? ` &middot; ${App.escapeHtml(regionStr)}` : ''} &middot; ${App.escapeHtml(App.formatEnvironmentType(site.environment_type))}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="ranked-score-wrap">
+                  <div class="ranked-score-val">${item.score.toFixed(1)}%</div>
+                  <div class="ranked-coverage">${App.escapeHtml(tr('finder.coverageLabel', null, 'Coverage:'))} <span class="mono">${item.coverage}%</span></div>
+                </div>
+              </div>
+
+              <div class="ranked-progress-bar" role="progressbar" aria-valuenow="${item.score}" aria-valuemin="0" aria-valuemax="100" aria-label="${App.escapeHtml(tr('finder.colSimilarity', null, 'Similarity score'))}">
+                <div class="ranked-progress-fill" style="width: ${Math.min(100, Math.max(0, item.score))}%;"></div>
+              </div>
+
+              <div class="ranked-meta-row">
+                <div>${tierBadge}</div>
+                <div>
+                  <a href="map.html#${encodeURIComponent(site.id)}" class="btn btn-secondary btn-sm">${App.escapeHtml(tr('finder.showOnMap', null, 'Show on map'))}</a>
+                </div>
+              </div>
+
+              <div class="flags-badge-row" aria-label="Site logistics flags">
+                ${flagsHtml}
+              </div>
+
+              ${warningsHtml}
+
+              <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.45;">
+                ${App.escapeHtml(summaryText)}
+              </p>
+
+              ${breakdownSection}
+
+              <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                  <span>${App.escapeHtml(tr('finder.sourcesLabel', null, 'Sources:'))}</span>
+                  ${sourcesHtml || App.escapeHtml(tr('finder.noneCited', null, 'None cited'))}
+                </div>
+                <div style="font-family: var(--font-mono);">
+                  ${App.escapeHtml(tr('finder.approxCoord', null, 'Approx. coord:'))} <span class="mono">${site.lat.toFixed(2)}&deg;, ${site.lon.toFixed(2)}&deg;</span>
+                </div>
+              </div>
+            </article>
+          `;
+        }
+
+        function renderLogisticsEmptyState(poolSize) {
+          resultsList.innerHTML = `
+            <div class="empty-state-box" role="status">
+              <p class="empty-state-title">${App.escapeHtml(tr('finder.emptyTitle', null, 'No candidate sites match these logistics filters.'))}</p>
+              <p class="empty-state-desc">
+                ${App.escapeHtml(tr('finder.emptyDesc', { pool: poolSize }, `All ${poolSize} sites in the selected pool were excluded by the active logistics restrictions. Try clearing one or more filters or enabling “Include climate-only sites”.`))}
+              </p>
+              <div class="empty-state-actions">
+                <button type="button" id="btn-clear-finder-filters" class="btn btn-primary btn-sm">
+                  ${App.escapeHtml(tr('finder.clearFilters', null, 'Clear logistics filters'))}
+                </button>
+              </div>
+            </div>
+          `;
+          const clearFiltersBtn = document.getElementById('btn-clear-finder-filters');
+          if (clearFiltersBtn) {
+            clearFiltersBtn.addEventListener('click', () => {
+              stationCheck.checked = false;
+              excludeProtectedCheck.checked = false;
+              excludeAccessCheck.checked = false;
+              runMatching();
+            });
+          }
+        }
+
         function runMatching() {
           updateDescriptions();
 
@@ -515,7 +698,17 @@
           const excludeAccessProblems = excludeAccessCheck.checked;
           const includeClimateOnly = climateOnlyCheck.checked;
 
-          const { results, nRanked, poolSize, allWeightsZero } = App.rankAnalogSites(
+          const {
+            results,
+            nRanked,
+            poolSize,
+            allWeightsZero,
+            isDiscoverySplit,
+            documentedAnalogs,
+            documentedTotalCount,
+            discoveryCandidates,
+            discoveryTotalCount
+          } = App.rankAnalogSites(
             data,
             targetId,
             profileId,
@@ -533,10 +726,9 @@
           const targetLabel = tObj ? (I18n ? I18n.tTarget(tObj, 'label') : (tObj.label || tObj.name)) : targetId;
           const profileName = pObj ? (I18n ? I18n.tProfile(pObj, 'name') : pObj.name) : profileId;
 
-          lastRunState = { results, targetLabel, profileName, targetId, profileId };
-          csvBtn.disabled = results.length === 0 || Boolean(allWeightsZero);
-
           if (allWeightsZero) {
+            lastRunState = { results: [], targetLabel, profileName, targetId, profileId };
+            csvBtn.disabled = true;
             resultsMeta.innerHTML = tr(
               'finder.zeroWeightsMeta',
               { target: App.escapeHtml(targetLabel), profile: App.escapeHtml(profileName) },
@@ -565,6 +757,65 @@
             return;
           }
 
+          if (isDiscoverySplit) {
+            const docSectionTitle = tr('finder.sectionDocTitle', null, 'Documented analogs');
+            const discSectionTitle = tr('finder.sectionDiscoveryKicker', null, 'Discovery candidates from the global scan');
+            const csvRows = [
+              ...documentedAnalogs.map((item, idx) => ({ ...item, displayRank: idx + 1, sectionLabel: docSectionTitle })),
+              ...discoveryCandidates.map((item, idx) => ({ ...item, displayRank: idx + 1, sectionLabel: discSectionTitle }))
+            ];
+            lastRunState = { results: csvRows, targetLabel, profileName, targetId, profileId };
+            csvBtn.disabled = csvRows.length === 0;
+
+            resultsMeta.innerHTML = tr(
+              'finder.splitScoredMeta',
+              {
+                docShown: documentedAnalogs.length,
+                discShown: discoveryCandidates.length,
+                pool: poolSize,
+                target: App.escapeHtml(targetLabel),
+                profile: App.escapeHtml(profileName)
+              },
+              `Showing <strong>${documentedAnalogs.length}</strong> documented analogs and <strong>${discoveryCandidates.length}</strong> discovery candidates (scored across <strong>${poolSize}</strong>-site pool) for <em>${App.escapeHtml(targetLabel)}</em> &bull; <em>${App.escapeHtml(profileName)}</em>.`
+            );
+
+            if (documentedAnalogs.length === 0 && discoveryCandidates.length === 0) {
+              renderLogisticsEmptyState(poolSize);
+              return;
+            }
+
+            resultsList.innerHTML = `
+              <section class="results-section" id="finder-section-documented" aria-labelledby="section-documented-heading">
+                <div class="results-section-header">
+                  <div>
+                    <h3 id="section-documented-heading" class="results-section-title">${App.escapeHtml(docSectionTitle)}</h3>
+                  </div>
+                  <span class="results-section-meta">${App.escapeHtml(tr('finder.sectionDocMeta', { total: documentedTotalCount }, `Top 5 of Tier A (${documentedTotalCount} matching)`))}</span>
+                </div>
+                ${documentedAnalogs.length
+                  ? documentedAnalogs.map((item, idx) => renderRankedCard(item, idx + 1, tObj, 'doc')).join('')
+                  : `<div class="section-empty-note">${App.escapeHtml(tr('finder.sectionDocEmpty', null, 'No Tier A documented analogs match this target and the active filters.'))}</div>`}
+              </section>
+
+              <section class="results-section" id="finder-section-discovery" aria-labelledby="section-discovery-heading">
+                <div class="results-section-header results-section-header-discovery">
+                  <div>
+                    <div class="results-section-kicker">${App.escapeHtml(discSectionTitle)}</div>
+                    <h3 id="section-discovery-heading" class="results-section-title">${App.escapeHtml(tr('finder.sectionDiscoveryTitle', null, 'Hypotheses to validate, not recommendations'))}</h3>
+                  </div>
+                  <span class="results-section-meta">${App.escapeHtml(tr('finder.sectionDiscoveryMeta', { total: discoveryTotalCount, pool: poolSize }, `Top 5 global-scan sites (${discoveryTotalCount} matching, scored across all ${poolSize} sites)`))}</span>
+                </div>
+                ${discoveryCandidates.length
+                  ? discoveryCandidates.map((item, idx) => renderRankedCard(item, idx + 1, tObj, 'disc')).join('')
+                  : `<div class="section-empty-note">${App.escapeHtml(tr('finder.sectionDiscoveryEmpty', null, 'No discovery candidates from the global scan match the active logistics filters.'))}</div>`}
+              </section>
+            `;
+            return;
+          }
+
+          lastRunState = { results, targetLabel, profileName, targetId, profileId };
+          csvBtn.disabled = results.length === 0;
+
           const topResults = results.slice(0, 10);
           let showingText;
           if (nRanked > 10) {
@@ -587,183 +838,11 @@
           );
 
           if (topResults.length === 0) {
-            resultsList.innerHTML = `
-              <div class="empty-state-box" role="status">
-                <p class="empty-state-title">${App.escapeHtml(tr('finder.emptyTitle', null, 'No candidate sites match these logistics filters.'))}</p>
-                <p class="empty-state-desc">
-                  ${App.escapeHtml(tr('finder.emptyDesc', { pool: poolSize }, `All ${poolSize} sites in the selected pool were excluded by the active logistics restrictions. Try clearing one or more filters or enabling “Include climate-only sites”.`))}
-                </p>
-                <div class="empty-state-actions">
-                  <button type="button" id="btn-clear-finder-filters" class="btn btn-primary btn-sm">
-                    ${App.escapeHtml(tr('finder.clearFilters', null, 'Clear logistics filters'))}
-                  </button>
-                </div>
-              </div>
-            `;
-            const clearFiltersBtn = document.getElementById('btn-clear-finder-filters');
-            if (clearFiltersBtn) {
-              clearFiltersBtn.addEventListener('click', () => {
-                stationCheck.checked = false;
-                excludeProtectedCheck.checked = false;
-                excludeAccessCheck.checked = false;
-                runMatching();
-              });
-            }
+            renderLogisticsEmptyState(poolSize);
             return;
           }
 
-          resultsList.innerHTML = topResults.map((item, idx) => {
-            const site = item.siteDef;
-            const tierClass = item.tier === 'A' ? 'tier-a-card' : 'tier-b-card';
-            const tierBadge = App.renderTierBadge(item.tier);
-            const flagsHtml = renderFlagsRow(site);
-            const warningsHtml = renderWarnings(item.warnings);
-
-            const sourcesHtml = (site.source_ids || []).map(sId => {
-              return App.renderSourceLink(sId, data.sources);
-            }).join(' ');
-
-            const breakdownRows = (item.paramBreakdown || []).map(param => {
-              const confBadge = App.renderConfidenceBadge(param.confidence);
-              const dirArrow = param.direction === 'lower'
-                ? tr('finder.dirLowerArrow', null, '↓ lower is closer')
-                : tr('finder.dirHigherArrow', null, '↑ higher is closer');
-              return `
-                <tr>
-                  <td>
-                    <strong>${App.escapeHtml(param.name)}</strong>
-                    <span style="font-size: 0.72rem; color: var(--text-muted); display: block;">${App.escapeHtml(dirArrow)}</span>
-                  </td>
-                  <td class="mono" style="text-align: right;">${App.escapeHtml(param.valueStr)}</td>
-                  <td class="mono" style="text-align: right; color: var(--accent); font-weight: 600;">${param.percentileScore.toFixed(1)}%</td>
-                  <td class="mono" style="text-align: right;">${param.weight}</td>
-                  <td style="text-align: right;">${confBadge}</td>
-                </tr>
-              `;
-            }).join('');
-
-            const targetBody = tObj ? tObj.body : '';
-            const bodyName = I18n ? I18n.tBody(targetBody) : (targetBody ? targetBody.charAt(0).toUpperCase() + targetBody.slice(1) : '');
-            const hasBodyRef = Boolean(targetBody && data.body_references && data.body_references[targetBody]);
-            const bodyGaps = App.computeAnalogyGaps
-              ? App.computeAnalogyGaps(site, data, hasBodyRef ? [targetBody] : [])
-              : { gravityLine: '', bodies: [] };
-            const bodyGapEntry = bodyGaps.bodies[0] || null;
-            const compactBreaksDownHtml = `
-              <div class="finder-breaks-down">
-                <div class="finder-breaks-down-header">
-                  <span>${App.escapeHtml(tr('finder.breaksDownTitle', { body: bodyName }, `Where the analogy breaks down (${bodyName})`))}</span>
-                  ${bodyGapEntry && bodyGapEntry.sourceId ? App.renderSourceLink(bodyGapEntry.sourceId, data.sources) : ''}
-                </div>
-                ${bodyGapEntry && bodyGapEntry.items.length ? `
-                  <div class="finder-breaks-down-list">
-                    ${bodyGapEntry.items.map(it => `
-                      <div class="finder-breaks-down-row">
-                        <div>
-                          <strong>${App.escapeHtml(it.parameterName)}</strong>
-                          <span class="finder-breaks-down-vals"> &mdash; ${App.escapeHtml(tr('finder.sitePrefix', null, 'Site:'))} <span class="mono">${App.escapeHtml(it.siteValueStr)}</span>, ${App.escapeHtml(tr('finder.refPrefix', null, 'Ref:'))} <span class="mono">${App.escapeHtml(it.refValueShort)}</span></span>
-                        </div>
-                        <div class="finder-breaks-down-gap">${App.escapeHtml(it.gapText)}</div>
-                      </div>
-                    `).join('')}
-                  </div>
-                ` : (targetBody === 'europa'
-                  ? `<p class="finder-breaks-down-gravity" style="margin-bottom: 6px;">${App.escapeHtml(tr('finder.breaksDownEuropaNote', null, 'Reference fact-sheet comparisons cover Moon and Mars; for Europa, Earth glaciers only partially approximate ice-shell cold.'))}</p>`
-                  : `<p class="finder-breaks-down-gravity" style="margin-bottom: 6px;">${App.escapeHtml(tr('map.breaksDownNoMatch', null, 'None of the reference parameters for this body are recorded at this site.'))}</p>`
-                )}
-                ${bodyGaps.gravityLine ? `<p class="finder-breaks-down-gravity">${App.escapeHtml(bodyGaps.gravityLine)}</p>` : ''}
-              </div>
-            `;
-
-            const breakdownSection = item.paramBreakdown.length > 0
-              ? `
-                <details class="breakdown-details">
-                  <summary class="breakdown-summary">
-                    ${App.escapeHtml(tr('finder.breakdownSummary', { n: item.paramBreakdown.length }, `Parameter breakdown (${item.paramBreakdown.length} active factors)`))}
-                  </summary>
-                  <div class="breakdown-table-wrap">
-                    <table class="breakdown-table" aria-label="${App.escapeHtml(tr('finder.colParam', null, 'Parameter breakdown'))}">
-                      <thead>
-                        <tr>
-                          <th scope="col">${App.escapeHtml(tr('finder.colParam', null, 'Parameter'))}</th>
-                          <th scope="col" style="text-align: right;">${App.escapeHtml(tr('finder.colSiteVal', null, 'Site value'))}</th>
-                          <th scope="col" style="text-align: right;">${App.escapeHtml(tr('finder.colSimilarity', null, 'Similarity'))}</th>
-                          <th scope="col" style="text-align: right;">${App.escapeHtml(tr('finder.colWeight', null, 'Weight'))}</th>
-                          <th scope="col" style="text-align: right;">${App.escapeHtml(tr('finder.colConfidence', null, 'Confidence'))}</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        ${breakdownRows}
-                      </tbody>
-                    </table>
-                  </div>
-                  ${compactBreaksDownHtml}
-                </details>
-              `
-              : `
-                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">
-                  ${App.escapeHtml(tr('finder.noBreakdown', null, 'No weighted target parameters with available site measurements (all active weights may be 0).'))}
-                </div>
-              `;
-
-            const countryStr = I18n ? I18n.tCountry(site.country) : site.country;
-            const regionStr = site.region ? (I18n ? I18n.tRegion(site.region) : site.region) : '';
-            const summaryText = I18n ? I18n.tSiteSummary(site) : (site.summary || '');
-
-            return `
-              <article class="ranked-card ${tierClass}" aria-labelledby="rank-${idx + 1}-title">
-                <div class="ranked-header">
-                  <div class="ranked-rank-wrap">
-                    <span class="ranked-num">#${idx + 1}</span>
-                    <div>
-                      <h3 id="rank-${idx + 1}-title" class="ranked-title">${App.escapeHtml(site.name)}</h3>
-                      <div style="font-size: 0.85rem; color: var(--text-secondary);">
-                        ${App.escapeHtml(countryStr)}${regionStr ? ` &middot; ${App.escapeHtml(regionStr)}` : ''} &middot; ${App.escapeHtml(App.formatEnvironmentType(site.environment_type))}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="ranked-score-wrap">
-                    <div class="ranked-score-val">${item.score.toFixed(1)}%</div>
-                    <div class="ranked-coverage">${App.escapeHtml(tr('finder.coverageLabel', null, 'Coverage:'))} <span class="mono">${item.coverage}%</span></div>
-                  </div>
-                </div>
-
-                <div class="ranked-progress-bar" role="progressbar" aria-valuenow="${item.score}" aria-valuemin="0" aria-valuemax="100" aria-label="${App.escapeHtml(tr('finder.colSimilarity', null, 'Similarity score'))}">
-                  <div class="ranked-progress-fill" style="width: ${Math.min(100, Math.max(0, item.score))}%;"></div>
-                </div>
-
-                <div class="ranked-meta-row">
-                  <div>${tierBadge}</div>
-                  <div>
-                    <a href="map.html#${encodeURIComponent(site.id)}" class="btn btn-secondary btn-sm">${App.escapeHtml(tr('finder.showOnMap', null, 'Show on map'))}</a>
-                  </div>
-                </div>
-
-                <div class="flags-badge-row" aria-label="Site logistics flags">
-                  ${flagsHtml}
-                </div>
-
-                ${warningsHtml}
-
-                <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.45;">
-                  ${App.escapeHtml(summaryText)}
-                </p>
-
-                ${breakdownSection}
-
-                <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
-                  <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-                    <span>${App.escapeHtml(tr('finder.sourcesLabel', null, 'Sources:'))}</span>
-                    ${sourcesHtml || App.escapeHtml(tr('finder.noneCited', null, 'None cited'))}
-                  </div>
-                  <div style="font-family: var(--font-mono);">
-                    ${App.escapeHtml(tr('finder.approxCoord', null, 'Approx. coord:'))} <span class="mono">${site.lat.toFixed(2)}&deg;, ${site.lon.toFixed(2)}&deg;</span>
-                  </div>
-                </div>
-              </article>
-            `;
-          }).join('');
+          resultsList.innerHTML = topResults.map((item, idx) => renderRankedCard(item, idx + 1, tObj, 'rank')).join('');
         }
 
         // Event Listeners

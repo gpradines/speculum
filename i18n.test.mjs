@@ -274,3 +274,105 @@ test('all HTML pages reference relative favicon.svg for GitHub Pages compatibili
     assert.equal(html.includes('href="/favicon.svg"'), false, `Found root-absolute /favicon.svg in ${page}`);
   }
 });
+
+test('speculum-logo.svg contains both globe and SPECULUM wordmark cleanly', () => {
+  const rootLogo = fs.readFileSync(new URL('./speculum-logo.svg', import.meta.url), 'utf8');
+  const pubLogo = fs.readFileSync(new URL('./public/speculum-logo.svg', import.meta.url), 'utf8');
+  assert.equal(rootLogo, pubLogo);
+  assert.match(rootLogo, /<svg\b/);
+  assert.match(rootLogo, /speculum-logo-planet-clip/);
+  assert.match(rootLogo, /class="wordmark"/);
+  assert.match(rootLogo, /class="planet-ring-front"/);
+});
+
+test('analog_data v4 has 89 sites: 23 documented and 61 discovery scan candidates', () => {
+  const data = loadAnalogData();
+  assert.equal(data.meta.version, 'v4');
+  assert.equal(data.sites.length, 89);
+
+  const documented = data.sites.filter(s => s.evidence_level === 'documented');
+  const discovery = data.sites.filter(s => s.discovery === true);
+  assert.equal(documented.length, 23);
+  assert.equal(discovery.length, 61);
+
+  for (const s of discovery) {
+    assert.equal(s.evidence_level, 'climate_only');
+    assert.deepEqual(Array.from(s.simulated_targets || []), []);
+    assert.equal(s.exploration_use, undefined);
+  }
+});
+
+test('Finder rankAnalogSites splits into Documented analogs (top 5 Tier A) and Discovery candidates (top 5 discovery) in full pool', () => {
+  const { data, app } = loadBrowserRuntime();
+
+  // Default: documented only (23 sites)
+  const docOnly = app.rankAnalogSites(data, 'mars_equatorial', 'wheeled_rover', {
+    includeClimateOnly: false
+  });
+  assert.equal(docOnly.poolSize, 23);
+  assert.equal(docOnly.isDiscoverySplit, false);
+
+  // With climate-only enabled: full pool (89 sites), split sections
+  const splitMars = app.rankAnalogSites(data, 'mars_equatorial', 'wheeled_rover', {
+    includeClimateOnly: true
+  });
+  assert.equal(splitMars.poolSize, 89);
+  assert.equal(splitMars.isDiscoverySplit, true);
+  assert.equal(splitMars.documentedAnalogs.length, 5);
+  assert.ok(splitMars.documentedAnalogs.every(r => r.tier === 'A'));
+  assert.equal(splitMars.discoveryCandidates.length, 5);
+  assert.ok(splitMars.discoveryCandidates.every(r => r.siteDef.discovery === true));
+
+  // Verify discovery candidates are sorted descending by score
+  for (let i = 1; i < splitMars.discoveryCandidates.length; i++) {
+    assert.ok(
+      splitMars.discoveryCandidates[i - 1].score >= splitMars.discoveryCandidates[i].score,
+      'Discovery candidates not sorted descending by score'
+    );
+  }
+
+  // Europa has 0 Tier A analogs but 5 discovery candidates when climate-only is enabled
+  const splitEuropa = app.rankAnalogSites(data, 'europa_ice_shell', 'wheeled_rover', {
+    includeClimateOnly: true
+  });
+  assert.equal(splitEuropa.poolSize, 89);
+  assert.equal(splitEuropa.isDiscoverySplit, true);
+  assert.equal(splitEuropa.documentedAnalogs.length, 0);
+  assert.equal(splitEuropa.discoveryCandidates.length, 5);
+  assert.ok(splitEuropa.discoveryCandidates.every(r => r.siteDef.discovery === true));
+});
+
+test('Home, Methods, Map, and Finder pages include required v4 Global scan and discovery markup', () => {
+  const indexHtml = fs.readFileSync(new URL('./index.html', import.meta.url), 'utf8');
+  assert.match(indexHtml, /id="stat-documented"/);
+  assert.match(indexHtml, /id="stat-scan-candidates"/);
+  assert.match(indexHtml, /data-i18n="globalScan\.title"/);
+  assert.match(indexHtml, /data-i18n-html="globalScan\.body"/);
+
+  const methodsHtml = fs.readFileSync(new URL('./methods.html', import.meta.url), 'utf8');
+  assert.match(methodsHtml, /id="methods-hero-doc-count"/);
+  assert.match(methodsHtml, /id="methods-hero-scan-count"/);
+  assert.match(methodsHtml, /data-i18n="globalScan\.title"/);
+  assert.match(methodsHtml, /data-i18n-html="globalScan\.body"/);
+
+  const mapHtml = fs.readFileSync(new URL('./map.html', import.meta.url), 'utf8');
+  assert.match(mapHtml, /badge-discovery-candidate/);
+  assert.match(mapHtml, /marker-discovery/);
+  assert.match(mapHtml, /const isDiscovery = Boolean\(site\.discovery\)/);
+
+  const finderHtml = fs.readFileSync(new URL('./finder.html', import.meta.url), 'utf8');
+  assert.match(finderHtml, /finder\.sectionDocTitle/);
+  assert.match(finderHtml, /finder\.sectionDiscoveryKicker/);
+  assert.match(finderHtml, /finder\.sectionDiscoveryTitle/);
+
+  assert.equal(
+    i18n.UI.en['map.panelDiscoveryBadge'],
+    'Discovery candidate from the global scan: climate data only, no literature yet'
+  );
+  assert.equal(i18n.UI.en['finder.sectionDocTitle'], 'Documented analogs');
+  assert.equal(i18n.UI.en['finder.sectionDiscoveryKicker'], 'Discovery candidates from the global scan');
+  assert.equal(i18n.UI.en['finder.sectionDiscoveryTitle'], 'Hypotheses to validate, not recommendations');
+  assert.equal(i18n.UI.en['globalScan.title'], 'Global scan');
+});
+
+

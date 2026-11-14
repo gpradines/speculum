@@ -360,11 +360,28 @@
       return b.coverage - a.coverage;
     });
 
+    const tierAMatches = filtered.filter(item => item.tier === 'A');
+    const documentedAnalogs = tierAMatches.slice(0, 5);
+    const discoveryMatches = includeClimateOnly
+      ? filtered
+          .filter(item => Boolean(item.siteDef && item.siteDef.discovery))
+          .sort((a, b) => {
+            if (b.score !== a.score) return b.score - a.score;
+            return b.coverage - a.coverage;
+          })
+      : [];
+    const discoveryCandidates = discoveryMatches.slice(0, 5);
+
     return {
       results: filtered,
       nRanked: filtered.length,
       poolSize: pool.length,
-      allWeightsZero
+      allWeightsZero,
+      isDiscoverySplit: includeClimateOnly,
+      documentedAnalogs,
+      documentedTotalCount: tierAMatches.length,
+      discoveryCandidates,
+      discoveryTotalCount: discoveryMatches.length
     };
   }
 
@@ -378,8 +395,10 @@
 
   function formatResultsCsv(results, targetLabel, profileName) {
     const i18n = getI18n();
+    const hasSection = results.some(item => item && item.sectionLabel);
     const headers = [
       tr('csv.rank', null, 'Rank'),
+      ...(hasSection ? [tr('csv.section', null, 'Result Section')] : []),
       tr('csv.siteId', null, 'Site ID'),
       tr('csv.siteName', null, 'Site Name'),
       tr('csv.country', null, 'Country'),
@@ -411,7 +430,8 @@
       const regionStr = s.region ? (i18n ? i18n.tRegion(s.region) : s.region) : '';
       const accessStr = f.access_note ? (i18n ? i18n.tAccessNote(s) : f.access_note) : '';
       return [
-        idx + 1,
+        item.displayRank || (idx + 1),
+        ...(hasSection ? [item.sectionLabel || ''] : []),
         s.id,
         s.name,
         countryStr,

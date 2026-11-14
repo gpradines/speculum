@@ -136,12 +136,12 @@
           <!-- Live Numbers from ANALOG_DATA -->
           <div class="hero-stats" id="catalog-stats" aria-label="Live Catalog Numbers" data-i18n-aria="index.statsAria">
             <div class="stat-card">
-              <div class="stat-value" id="stat-sites">-</div>
-              <div class="stat-label" data-i18n="index.statSites">Sites in catalog</div>
-            </div>
-            <div class="stat-card">
               <div class="stat-value" id="stat-documented">-</div>
               <div class="stat-label" data-i18n="index.statDocumented">Documented sites</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="stat-scan-candidates">-</div>
+              <div class="stat-label" data-i18n="index.statScanCandidates">Scan candidates</div>
             </div>
             <div class="stat-card">
               <div class="stat-value" id="stat-params">-</div>
@@ -236,6 +236,16 @@
           <div>
             <a href="methods.html" class="btn btn-primary" data-i18n="index.dataCta">Methods and sources &rarr;</a>
           </div>
+        </div>
+      </section>
+
+      <!-- Global Scan Section -->
+      <section class="home-section" aria-labelledby="global-scan-heading">
+        <div class="global-scan-box">
+          <h2 id="global-scan-heading" class="section-heading" data-i18n="globalScan.title">Global scan</h2>
+          <p data-i18n-html="globalScan.body">
+            We scanned <span class="scan-count-inline" id="home-scan-count">61</span> regions of the world with the same climate method to look for candidates outside the known catalog. They are hypotheses based on climate only.
+          </p>
         </div>
       </section>
 
@@ -350,15 +360,22 @@
         const data = App && App.getData();
         if (!data) return;
 
-        const sitesCount = data.sites.length;
         const documentedCount = data.sites.filter(s => s.evidence_level === 'documented').length;
+        const scanCandidatesCount = data.sites.filter(s => s.discovery === true).length;
         const paramsWithDataCount = data.parameters.filter(p => p.in_data).length;
         const sourcesCount = data.sources.length;
 
-        document.getElementById('stat-sites').textContent = String(sitesCount);
-        document.getElementById('stat-documented').textContent = String(documentedCount);
-        document.getElementById('stat-params').textContent = String(paramsWithDataCount);
-        document.getElementById('stat-sources').textContent = String(sourcesCount);
+        const docEl = document.getElementById('stat-documented');
+        const scanEl = document.getElementById('stat-scan-candidates');
+        const paramsEl = document.getElementById('stat-params');
+        const sourcesEl = document.getElementById('stat-sources');
+        if (docEl) docEl.textContent = String(documentedCount);
+        if (scanEl) scanEl.textContent = String(scanCandidatesCount);
+        if (paramsEl) paramsEl.textContent = String(paramsWithDataCount);
+        if (sourcesEl) sourcesEl.textContent = String(sourcesCount);
+
+        const homeScanInline = document.getElementById('home-scan-count');
+        if (homeScanInline) homeScanInline.textContent = String(scanCandidatesCount);
         const totalParamsEl = document.getElementById('data-params-count');
         if (totalParamsEl) totalParamsEl.textContent = String(data.parameters.length);
       })();

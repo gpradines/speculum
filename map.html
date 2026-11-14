@@ -196,6 +196,10 @@
               <span class="legend-swatch swatch-gray"></span>
               <span id="legend-climate-label">Climate data only</span>
             </div>
+            <div class="legend-item">
+              <span class="legend-swatch swatch-discovery"></span>
+              <span id="legend-discovery-label">Global scan candidates</span>
+            </div>
           </div>
         </section>
 
@@ -350,9 +354,11 @@
         const resetMapFiltersBtn = document.getElementById('btn-reset-map-filters');
         const legendDocEl = document.getElementById('legend-doc-label');
         const legendClimateEl = document.getElementById('legend-climate-label');
+        const legendDiscoveryEl = document.getElementById('legend-discovery-label');
 
         const docSitesCount = data.sites.filter(s => s.evidence_level === 'documented').length;
-        const climateSitesCount = data.sites.length - docSitesCount;
+        const discoverySitesCount = data.sites.filter(s => s.discovery === true).length;
+        const nonDiscoveryClimateCount = data.sites.filter(s => s.evidence_level !== 'documented' && !s.discovery).length;
 
         function populateFilterOptions() {
           const prevTarget = targetSelect.value || 'all';
@@ -386,7 +392,10 @@
             legendDocEl.textContent = tr('map.legendDoc', { n: docSitesCount }, `Documented analogs (${docSitesCount})`);
           }
           if (legendClimateEl) {
-            legendClimateEl.textContent = tr('map.legendClimate', { n: climateSitesCount }, `Climate data only (${climateSitesCount})`);
+            legendClimateEl.textContent = tr('map.legendClimate', { n: nonDiscoveryClimateCount }, `Climate data only (${nonDiscoveryClimateCount})`);
+          }
+          if (legendDiscoveryEl) {
+            legendDiscoveryEl.textContent = tr('map.legendDiscovery', { n: discoverySitesCount }, `Global scan candidates (${discoverySitesCount})`);
           }
         }
 
@@ -402,7 +411,9 @@
           const isDocumented = site.evidence_level === 'documented';
           const statusLabel = isDocumented
             ? tr('map.tooltipDoc', null, 'Documented analog')
-            : tr('map.tooltipClimate', null, 'Climate data only');
+            : (site.discovery
+              ? tr('map.tooltipDiscovery', null, 'Discovery candidate (climate only)')
+              : tr('map.tooltipClimate', null, 'Climate data only'));
           return `<strong>${App.escapeHtml(site.name)}</strong><br><span style="font-size: 0.75rem; color: #94a3b8;">${App.escapeHtml(statusLabel)}</span>`;
         }
 
@@ -442,12 +453,17 @@
           // Create Custom Marker for a site
           function createMarker(site) {
             const isDocumented = site.evidence_level === 'documented';
-            const markerClass = isDocumented ? 'marker-documented' : 'marker-climate';
+            const isDiscovery = Boolean(site.discovery);
+            const markerClass = isDocumented
+              ? 'marker-documented'
+              : (isDiscovery ? 'marker-discovery' : 'marker-climate');
+            const iconSize = isDiscovery ? [14, 14] : [24, 24];
+            const iconAnchor = isDiscovery ? [7, 7] : [12, 12];
             const icon = L.divIcon({
               className: 'custom-leaflet-icon',
               html: `<div class="leaflet-site-marker ${markerClass}" id="marker-${site.id}" title="${App.escapeHtml(site.name)}"><span class="marker-dot"></span></div>`,
-              iconSize: [24, 24],
-              iconAnchor: [12, 12]
+              iconSize,
+              iconAnchor
             });
 
             const marker = L.marker([site.lat, site.lon], {
@@ -677,74 +693,84 @@
             : tr('map.accessNoteNone', null, 'None reported.');
           const accessNoteFlag = `<div class="flag-item"><span class="flag-icon" aria-hidden="true">ℹ</span><div><strong>${App.escapeHtml(tr('map.accessNoteLabel', null, 'Access note:'))}</strong> ${App.escapeHtml(accessNoteText)}</div></div>`;
 
+          const isDiscovery = Boolean(site.discovery);
+
           // Evidence Level Badge
-          const climateBadgeHtml = site.evidence_level === 'climate_only'
-            ? `<div class="badge-climate-only"><span aria-hidden="true">◈</span> ${App.escapeHtml(tr('map.panelClimateBadge', null, 'Climate data only: no literature source yet'))}</div>`
-            : '';
+          let climateBadgeHtml = '';
+          if (isDiscovery) {
+            climateBadgeHtml = `<div class="badge-climate-only badge-discovery-candidate"><span aria-hidden="true">◈</span> <span>${App.escapeHtml(tr('map.panelDiscoveryBadge', null, 'Discovery candidate from the global scan: climate data only, no literature yet'))}</span></div>`;
+          } else if (site.evidence_level === 'climate_only') {
+            climateBadgeHtml = `<div class="badge-climate-only"><span aria-hidden="true">◈</span> <span>${App.escapeHtml(tr('map.panelClimateBadge', null, 'Climate data only: no literature source yet'))}</span></div>`;
+          }
 
           const summaryText = I18n ? I18n.tSiteSummary(site) : (site.summary || '');
 
-          // How this site helps exploration
-          const explorationUse = App.getSiteExplorationUse ? App.getSiteExplorationUse(site, data) : null;
-          const explorationSectionHtml = explorationUse
-            ? `
-              <div class="panel-section" id="panel-exploration-use">
-                <div class="panel-section-title">${App.escapeHtml(tr('map.explorationTitle', null, 'How this site helps exploration'))}</div>
-                ${explorationUse.tags.length ? `
-                  <div class="use-tag-chips">
-                    ${explorationUse.tags.map(t => `<span class="use-tag-chip">${App.escapeHtml(t.label)}</span>`).join('')}
+          // How this site helps exploration (hidden for discovery sites)
+          const explorationUse = !isDiscovery && App.getSiteExplorationUse ? App.getSiteExplorationUse(site, data) : null;
+          const explorationSectionHtml = isDiscovery
+            ? ''
+            : (explorationUse
+              ? `
+                <div class="panel-section" id="panel-exploration-use">
+                  <div class="panel-section-title">${App.escapeHtml(tr('map.explorationTitle', null, 'How this site helps exploration'))}</div>
+                  ${explorationUse.tags.length ? `
+                    <div class="use-tag-chips">
+                      ${explorationUse.tags.map(t => `<span class="use-tag-chip">${App.escapeHtml(t.label)}</span>`).join('')}
+                    </div>
+                  ` : ''}
+                  ${explorationUse.explorationValue ? `<p class="exploration-value-text">${App.escapeHtml(explorationUse.explorationValue)}</p>` : ''}
+                  ${explorationUse.sourceIds.length ? `
+                    <div class="exploration-sources-row">
+                      <span>${App.escapeHtml(tr('finder.sourcesLabel', null, 'Sources:'))}</span>
+                      ${explorationUse.sourceIds.map(sId => App.renderSourceLink(sId, data.sources)).join(' ')}
+                    </div>
+                  ` : ''}
+                </div>
+              `
+              : `
+                <div class="panel-section" id="panel-exploration-use">
+                  <div class="panel-section-title">${App.escapeHtml(tr('map.explorationTitle', null, 'How this site helps exploration'))}</div>
+                  <p class="text-muted" style="font-size: 0.8rem; margin: 0;">${App.escapeHtml(tr('map.explorationEmpty', null, 'No documented exploration campaign recorded yet (climate-only candidate).'))}</p>
+                </div>
+              `);
+
+          // Where the analogy breaks down (hidden for discovery sites)
+          let breaksDownSectionHtml = '';
+          if (!isDiscovery) {
+            const analogyGaps = App.computeAnalogyGaps ? App.computeAnalogyGaps(site, data) : { gravityLine: '', bodies: [] };
+            const breaksDownBodiesHtml = analogyGaps.bodies.length
+              ? analogyGaps.bodies.map(b => `
+                  <div class="breaks-down-group">
+                    <div class="breaks-down-group-header">
+                      <span class="breaks-down-group-title">${App.escapeHtml(b.label)}</span>
+                      ${b.sourceId ? App.renderSourceLink(b.sourceId, data.sources) : ''}
+                    </div>
+                    ${b.items.length ? `
+                      <div class="breaks-down-items">
+                        ${b.items.map(it => `
+                          <div class="breaks-down-item">
+                            <div class="breaks-down-param">${App.escapeHtml(it.parameterName)}</div>
+                            <div class="breaks-down-values">
+                              <span><strong>${App.escapeHtml(tr('map.breaksDownSite', null, 'Site'))}:</strong> <span class="mono">${App.escapeHtml(it.siteValueStr)}</span></span>
+                              <span><strong>${App.escapeHtml(tr('map.breaksDownReference', null, 'Reference'))}:</strong> ${App.escapeHtml(it.refText)}</span>
+                            </div>
+                            <div class="breaks-down-gap">${App.escapeHtml(it.gapText)}</div>
+                          </div>
+                        `).join('')}
+                      </div>
+                    ` : `<p class="text-muted" style="font-size: 0.78rem; margin: 0;">${App.escapeHtml(tr('map.breaksDownNoMatch', null, 'None of the reference parameters for this body are recorded at this site.'))}</p>`}
                   </div>
-                ` : ''}
-                ${explorationUse.explorationValue ? `<p class="exploration-value-text">${App.escapeHtml(explorationUse.explorationValue)}</p>` : ''}
-                ${explorationUse.sourceIds.length ? `
-                  <div class="exploration-sources-row">
-                    <span>${App.escapeHtml(tr('finder.sourcesLabel', null, 'Sources:'))}</span>
-                    ${explorationUse.sourceIds.map(sId => App.renderSourceLink(sId, data.sources)).join(' ')}
-                  </div>
-                ` : ''}
-              </div>
-            `
-            : `
-              <div class="panel-section" id="panel-exploration-use">
-                <div class="panel-section-title">${App.escapeHtml(tr('map.explorationTitle', null, 'How this site helps exploration'))}</div>
-                <p class="text-muted" style="font-size: 0.8rem; margin: 0;">${App.escapeHtml(tr('map.explorationEmpty', null, 'No documented exploration campaign recorded yet (climate-only candidate).'))}</p>
+                `).join('')
+              : `<p class="text-muted" style="font-size: 0.8rem; margin: 0 0 8px 0;">${App.escapeHtml(tr('map.breaksDownNoTargetBody', null, 'No Moon or Mars target is assigned yet (climate-only candidate).'))}</p>`;
+
+            breaksDownSectionHtml = `
+              <div class="panel-section" id="panel-breaks-down">
+                <div class="panel-section-title">${App.escapeHtml(tr('map.breaksDownTitle', null, 'Where the analogy breaks down'))}</div>
+                ${breaksDownBodiesHtml}
+                ${analogyGaps.gravityLine ? `<div class="breaks-down-gravity">${App.escapeHtml(analogyGaps.gravityLine)}</div>` : ''}
               </div>
             `;
-
-          // Where the analogy breaks down
-          const analogyGaps = App.computeAnalogyGaps ? App.computeAnalogyGaps(site, data) : { gravityLine: '', bodies: [] };
-          const breaksDownBodiesHtml = analogyGaps.bodies.length
-            ? analogyGaps.bodies.map(b => `
-                <div class="breaks-down-group">
-                  <div class="breaks-down-group-header">
-                    <span class="breaks-down-group-title">${App.escapeHtml(b.label)}</span>
-                    ${b.sourceId ? App.renderSourceLink(b.sourceId, data.sources) : ''}
-                  </div>
-                  ${b.items.length ? `
-                    <div class="breaks-down-items">
-                      ${b.items.map(it => `
-                        <div class="breaks-down-item">
-                          <div class="breaks-down-param">${App.escapeHtml(it.parameterName)}</div>
-                          <div class="breaks-down-values">
-                            <span><strong>${App.escapeHtml(tr('map.breaksDownSite', null, 'Site'))}:</strong> <span class="mono">${App.escapeHtml(it.siteValueStr)}</span></span>
-                            <span><strong>${App.escapeHtml(tr('map.breaksDownReference', null, 'Reference'))}:</strong> ${App.escapeHtml(it.refText)}</span>
-                          </div>
-                          <div class="breaks-down-gap">${App.escapeHtml(it.gapText)}</div>
-                        </div>
-                      `).join('')}
-                    </div>
-                  ` : `<p class="text-muted" style="font-size: 0.78rem; margin: 0;">${App.escapeHtml(tr('map.breaksDownNoMatch', null, 'None of the reference parameters for this body are recorded at this site.'))}</p>`}
-                </div>
-              `).join('')
-            : `<p class="text-muted" style="font-size: 0.8rem; margin: 0 0 8px 0;">${App.escapeHtml(tr('map.breaksDownNoTargetBody', null, 'No Moon or Mars target is assigned yet (climate-only candidate).'))}</p>`;
-
-          const breaksDownSectionHtml = `
-            <div class="panel-section" id="panel-breaks-down">
-              <div class="panel-section-title">${App.escapeHtml(tr('map.breaksDownTitle', null, 'Where the analogy breaks down'))}</div>
-              ${breaksDownBodiesHtml}
-              ${analogyGaps.gravityLine ? `<div class="breaks-down-gravity">${App.escapeHtml(analogyGaps.gravityLine)}</div>` : ''}
-            </div>
-          `;
+          }
 
           // Build Panel HTML
           inspectorContent.innerHTML = `
@@ -945,7 +971,9 @@
             const altText = altParam && typeof altParam.typical === 'number' ? `${altParam.typical} m` : '-';
             const badgeText = isDocumented
               ? tr('map.badgeDoc', null, 'Documented')
-              : tr('map.badgeClimate', null, 'Climate only');
+              : (site.discovery
+                ? tr('map.badgeDiscovery', null, 'Scan candidate')
+                : tr('map.badgeClimate', null, 'Climate only'));
 
             rowEl.innerHTML = `
               <td style="padding: 10px 14px;"><strong>${App.escapeHtml(site.name)}</strong></td>

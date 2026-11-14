@@ -127,6 +127,17 @@
         </p>
       </div>
 
+      <div class="methods-catalog-counts" aria-label="Catalog composition">
+        <div class="methods-count-chip">
+          <span data-i18n="methods.docCountLabel">Documented sites</span>
+          <strong id="methods-hero-doc-count">23</strong>
+        </div>
+        <div class="methods-count-chip">
+          <span data-i18n="methods.scanCountLabel">Scan candidates</span>
+          <strong id="methods-hero-scan-count">61</strong>
+        </div>
+      </div>
+
       <!-- Section 1: Scoring method and worked example -->
       <section class="methods-section" id="scoring" aria-labelledby="method-scoring-heading">
         <h2 id="method-scoring-heading" data-i18n="methods.s1Title">1. Scoring method</h2>
@@ -137,7 +148,7 @@
         <h3 data-i18n="methods.stepHeading">Step-by-step calculation</h3>
         <ol style="padding-left: 22px; margin-bottom: 16px;">
           <li data-i18n-html="methods.step1">
-            <strong>Choose the comparison pool:</strong> By default, the pool is the <span id="method-doc-count">23</span> documented sites. If you check <em>Include climate-only sites</em> on the calculator, all <span id="method-all-count">89</span> sites enter the pool. Percentile ranks are always computed across this pool <em>before</em> logistics filters hide any sites.
+            <strong>Choose the comparison pool:</strong> By default, the pool is the <span id="method-doc-count">23</span> documented sites. If you check <em>Include climate-only sites</em> on the calculator, the full catalog (<span id="method-all-count">89</span> sites total, including the <span id="method-scan-count">61</span> global-scan candidates) enters the pool. Percentile ranks are always computed across this pool <em>before</em> logistics filters hide any sites.
           </li>
           <li data-i18n-html="methods.step2">
             <strong>Rank each active parameter in the target's direction:</strong> For every parameter used by the target that has site data, take all typical numeric values in the pool (count = <code>n</code>) and compute each site's percentile rank between 0 and 1:
@@ -158,9 +169,16 @@
             A low score does not mean a site is useless; a low coverage percentage warns that key parameters lacked measurements at that site.
           </li>
           <li data-i18n-html="methods.step5">
-            <strong>Filter and sort into two tiers:</strong> Logistics filters (support station, protected area, access problems) hide ineligible sites after scoring. Remaining sites are grouped into <strong>Tier A</strong> (<em>Documented analog of this target</em>) first, then <strong>Tier B</strong> (<em>Similar climate, no documented analog</em>), each sorted from highest score to lowest.
+            <strong>Filter and sort into two tiers (or split discovery results):</strong> Logistics filters (support station, protected area, access problems) hide ineligible sites after scoring. By default, sites are grouped into <strong>Tier A</strong> (<em>Documented analog of this target</em>) first, then <strong>Tier B</strong> (<em>Similar climate, no documented analog</em>). When <em>Include climate-only sites</em> is enabled, results are split into <em>Documented analogs</em> (top 5 of Tier A) and <em>Discovery candidates from the global scan</em> (top 5 global-scan sites, regardless of tier).
           </li>
         </ol>
+
+        <div class="methods-global-scan" id="global-scan">
+          <h3 data-i18n="globalScan.title">Global scan</h3>
+          <p data-i18n-html="globalScan.body">
+            We scanned <span class="scan-count-inline" id="method-global-scan-count">61</span> regions of the world with the same climate method to look for candidates outside the known catalog. They are hypotheses based on climate only.
+          </p>
+        </div>
 
         <!-- Worked example using ANALOG_DATA numbers -->
         <div class="worked-example-box" aria-labelledby="worked-example-heading">
@@ -499,10 +517,19 @@
 
         function renderDynamicContent() {
           const docCount = data.sites.filter(s => s.evidence_level === 'documented').length;
+          const scanCount = data.sites.filter(s => s.discovery === true).length;
+          const heroDocEl = document.getElementById('methods-hero-doc-count');
+          const heroScanEl = document.getElementById('methods-hero-scan-count');
           const docEl = document.getElementById('method-doc-count');
+          const scanEl = document.getElementById('method-scan-count');
           const allEl = document.getElementById('method-all-count');
+          const globalScanInlineEl = document.getElementById('method-global-scan-count');
+          if (heroDocEl) heroDocEl.textContent = String(docCount);
+          if (heroScanEl) heroScanEl.textContent = String(scanCount);
           if (docEl) docEl.textContent = String(docCount);
+          if (scanEl) scanEl.textContent = String(scanCount);
           if (allEl) allEl.textContent = String(data.sites.length);
+          if (globalScanInlineEl) globalScanInlineEl.textContent = String(scanCount);
 
           // Confidence multipliers from ANALOG_DATA.meta
           const cm = (data.meta && data.meta.confidence_multiplier) || { high: 1.0, medium: 0.8, low: 0.5 };

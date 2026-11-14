@@ -1193,10 +1193,75 @@ select:focus-visible {
   }
 }
 
+.ranked-card.discovery-card {
+  border-left: 4px solid var(--conf-low);
+}
+
+.results-section {
+  margin-bottom: 28px;
+}
+
+.results-section:last-child {
+  margin-bottom: 0;
+}
+
+.results-section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.results-section-header-discovery {
+  border-bottom-color: rgba(245, 158, 11, 0.45);
+}
+
+.results-section-kicker {
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--conf-med);
+  margin-bottom: 3px;
+}
+
+.results-section-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0;
+  line-height: 1.25;
+}
+
+.results-section-meta {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.section-empty-note {
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+
 .flag-pill-climate {
   color: var(--conf-low);
   border-color: var(--border);
   background: var(--conf-low-bg);
+}
+
+.flag-pill-discovery {
+  color: var(--conf-low);
+  border-color: var(--border);
+  background: var(--surface-elevated);
 }
 
 /* Warnings Stack on Result Cards */
@@ -1499,10 +1564,40 @@ select:focus-visible {
   background: #cbd5e1;
 }
 
+.leaflet-site-marker.marker-discovery {
+  width: 14px;
+  height: 14px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.leaflet-site-marker.marker-discovery .marker-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #94a3b8;
+  border: 1px solid rgba(15, 23, 42, 0.5);
+  box-shadow: 0 0 3px rgba(148, 163, 184, 0.4);
+  transition: transform 0.16s ease, background-color 0.16s ease, box-shadow 0.16s ease;
+}
+
 .leaflet-site-marker:hover,
 .leaflet-site-marker.marker-active {
   transform: scale(1.45);
   z-index: 1000 !important;
+}
+
+.leaflet-site-marker.marker-discovery:hover,
+.leaflet-site-marker.marker-discovery.marker-active {
+  transform: scale(1.65);
+}
+
+.leaflet-site-marker.marker-discovery:hover .marker-dot,
+.leaflet-site-marker.marker-discovery.marker-active .marker-dot {
+  background: #e2e8f0;
+  border-color: #ffffff;
+  box-shadow: 0 0 10px #cbd5e1, 0 0 14px rgba(148, 163, 184, 0.7);
 }
 
 .leaflet-site-marker.marker-documented.marker-active {
@@ -1529,8 +1624,9 @@ select:focus-visible {
   border-radius: var(--radius-sm);
   padding: 8px 14px;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 16px;
+  gap: 10px 16px;
   font-size: 0.78rem;
   box-shadow: var(--shadow-sm);
 }
@@ -1546,6 +1642,7 @@ select:focus-visible {
   width: 12px;
   height: 12px;
   border-radius: 50%;
+  flex-shrink: 0;
 }
 
 .legend-swatch.swatch-blue {
@@ -1557,6 +1654,13 @@ select:focus-visible {
 .legend-swatch.swatch-gray {
   background: #94a3b8;
   border: 1px solid #e2e8f0;
+}
+
+.legend-swatch.swatch-discovery {
+  width: 8px;
+  height: 8px;
+  background: #94a3b8;
+  border: 1px solid #cbd5e1;
 }
 
 /* Side Panel (Desktop) & Bottom Sheet (Mobile) */
@@ -1628,19 +1732,25 @@ select:focus-visible {
   border-color: var(--accent);
 }
 
-/* Climate data only badge */
+/* Climate data only & discovery badges */
 .badge-climate-only {
   display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  align-items: flex-start;
+  gap: 7px;
   background: rgba(148, 163, 184, 0.15);
   border: 1px solid #94a3b8;
-  color: #cbd5e1;
+  color: var(--text-main);
   font-size: 0.78rem;
   font-weight: 600;
-  padding: 4px 10px;
+  line-height: 1.35;
+  padding: 5px 10px;
   border-radius: var(--radius-sm);
   margin-bottom: 10px;
+}
+
+.badge-discovery-candidate {
+  background: var(--conf-low-bg);
+  border-color: var(--conf-low);
 }
 
 /* Approximate coordinates note */
@@ -2274,6 +2384,66 @@ select:focus-visible {
   font-size: 0.94rem;
   color: var(--text-secondary);
   line-height: 1.55;
+}
+
+.global-scan-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--conf-low);
+  border-radius: var(--radius-md);
+  padding: 22px 26px;
+}
+
+.global-scan-box p {
+  font-size: 0.96rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.methods-catalog-counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.methods-count-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 10px 16px;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+
+.methods-count-chip strong {
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+  color: var(--accent);
+}
+
+.methods-global-scan {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--conf-low);
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  margin-top: 20px;
+}
+
+.methods-global-scan h3 {
+  margin-top: 0;
+  margin-bottom: 6px;
+  color: var(--text-main);
+}
+
+.methods-global-scan p {
+  margin-bottom: 0;
+  font-size: 0.92rem;
 }
 
 .team-panel {
