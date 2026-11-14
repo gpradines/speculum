@@ -1,0 +1,6 @@
+{
+  "name": "AnalogFinder",
+  "description": "Scientific directory and similarity matcher linking Earth planetary analog test sites to lunar and Martian exploration environments using NASA POWER climatology.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

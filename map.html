@@ -1,0 +1,1020 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Map - Speculum</title>
+    <meta name="description" content="Map of Earth analog test sites for Moon, Mars, and Europa exploration with NASA POWER climate data and site limits." />
+    <meta property="og:title" content="Map - Speculum" />
+    <meta property="og:description" content="Map of Earth analog test sites for Moon, Mars, and Europa exploration with NASA POWER climate data and site limits." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+    <!-- Leaflet CSS (locally bundled so the site works offline except for OpenStreetMap tiles) -->
+    <link rel="stylesheet" href="vendor/leaflet/leaflet.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-i18n-page-title="meta.mapTitle" data-i18n-page-desc="meta.mapDesc">
+    <a href="#main-content" class="skip-link" data-i18n="skip.link">Skip to main content</a>
+
+    <!-- Shared Header with Speculum Blue Orbit Branding -->
+    <header class="site-header" role="banner">
+      <div class="header-container">
+        <a href="index.html" class="brand" aria-label="Speculum Home" data-i18n-aria="brand.homeAria">
+          <span class="brand-planet-logo" aria-hidden="true">
+            <svg width="46" height="38" viewBox="0 0 64 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <clipPath id="speculum-planet-clip">
+                  <circle cx="27" cy="27" r="17" />
+                </clipPath>
+              </defs>
+              <g transform="translate(27 27) rotate(-29)">
+                <path class="planet-ring-back" d="M -26 0 A 26 7.4 0 0 1 26 0 A 26 6.2 0 0 0 -26 0 Z" />
+              </g>
+              <g clip-path="url(#speculum-planet-clip)">
+                <circle cx="27" cy="27" r="17" fill="#0d1e3a" />
+                <circle cx="21" cy="21" r="18" fill="#4670ab" />
+                <circle cx="15.5" cy="15.5" r="13" fill="#7aa1d4" />
+                <path d="M 10.5 29 C 9.5 20.5 14 12.5 23 10.5 C 26 9.9 29.5 10.1 32 11 C 26 11.4 20 14 16 18.5 C 12.2 22.8 11 26.2 10.5 29 Z" fill="#efeae0" />
+                <path d="M 28 15 C 31 15 34 16 35 18 C 33.5 19.5 34 21 37 22 C 40 23 43.5 26 44 31 C 44 38 37 44 28 44 C 24 44 21 42 20 39 C 19 36 22 34 24 33 C 26 32 25 29 23 27.5 C 21 26 22 23 24.5 22 C 27 21 26 18 28 15 Z" fill="#0d1e3a" opacity="0.92" />
+                <path d="M 15 21 C 17 19.5 20 20 21 22 C 21.5 23.5 19.5 25 18 25.5 C 16.5 26 14 23.5 15 21 Z" fill="#13294b" opacity="0.85" />
+                <path d="M 13 24.5 C 14.5 23.5 16.5 23.5 17.5 24.5 C 16 25.5 14.5 26 13 24.5 Z" fill="#efeae0" opacity="0.92" />
+                <path d="M 18.5 15.5 C 21 14 24 14 25.5 15 C 23.5 16.2 21 16.5 18.5 15.5 Z" fill="#efeae0" opacity="0.9" />
+              </g>
+              <circle class="planet-rim" cx="27" cy="27" r="16.7" fill="none" stroke-width="0.9" />
+              <g transform="translate(27 27) rotate(-29)">
+                <path class="planet-ring-front" d="M -26 0 A 26 8.3 0 0 0 26 0 A 26 5.8 0 0 1 -26 0 Z" />
+              </g>
+              <path class="planet-star" d="M 53 2 L 54.4 8.6 L 61 10 L 54.4 11.4 L 53 18 L 51.6 11.4 L 45 10 L 51.6 8.6 Z" />
+            </svg>
+          </span>
+          <span class="brand-wordmark" role="img" aria-label="SPECULUM">
+            <svg width="148" height="16" viewBox="0 0 216 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 19 2 L 7 2 A 4.5 4.5 0 0 0 2.5 6.5 A 4.5 4.5 0 0 0 7 11 L 15 11 A 4.5 4.5 0 0 1 19.5 15.5 A 4.5 4.5 0 0 1 15 20 L 2 20" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="round" />
+              <path d="M 29.5 21.2 L 29.5 2 L 41.5 2 A 4.5 4.5 0 0 1 46 6.5 A 4.5 4.5 0 0 1 41.5 11 L 29.5 11" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="round" />
+              <path d="M 55.5 2 L 72.5 2 M 55.5 11 L 72.5 11 M 55.5 20 L 72.5 20" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" />
+              <path d="M 100 2 L 88.5 2 A 6 6 0 0 0 82.5 8 L 82.5 14 A 6 6 0 0 0 88.5 20 L 100 20" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="round" />
+              <path d="M 109.5 0.8 L 109.5 14 A 6 6 0 0 0 115.5 20 L 122 20 A 6 6 0 0 0 128 14 L 128 0.8" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="round" />
+              <path d="M 138.5 0.8 L 138.5 20 L 155 20" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="miter" />
+              <path d="M 163.5 0.8 L 163.5 14 A 6 6 0 0 0 169.5 20 L 176 20 A 6 6 0 0 0 182 14 L 182 0.8" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="round" />
+              <path d="M 192.5 21.2 L 192.5 2 L 194 2 L 203 17.5 L 212 2 L 213.5 2 L 213.5 21.2" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="round" />
+            </svg>
+          </span>
+        </a>
+
+        <button type="button" class="mobile-nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Toggle navigation menu" data-i18n="nav.menu" data-i18n-aria="nav.toggleAria">
+          Menu
+        </button>
+
+        <nav id="primary-nav" class="site-nav" role="navigation" aria-label="Primary Navigation" data-i18n-aria="nav.aria">
+          <a href="index.html" class="nav-link" data-i18n="nav.overview">Overview</a>
+          <a href="map.html" class="nav-link active" aria-current="page" data-i18n="nav.map">Map</a>
+          <a href="finder.html" class="nav-link" data-i18n="nav.finder">Finder</a>
+          <a href="methods.html" class="nav-link" data-i18n="nav.methods">Methods</a>
+          <div class="lang-dropdown" id="lang-dropdown">
+            <button
+              type="button"
+              id="lang-toggle-btn"
+              class="nav-lang-btn"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="lang-dropdown-menu"
+              aria-label="Language: English. Select language"
+              title="Select language"
+            >
+              <svg class="lang-globe-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M2 12h20"></path>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+              </svg>
+              <span class="lang-code">English</span>
+              <svg class="lang-chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <ul id="lang-dropdown-menu" class="lang-dropdown-menu" role="menu" aria-label="Select language" hidden>
+              <li role="none">
+                <button type="button" class="lang-option active" role="menuitemradio" aria-checked="true" data-lang="en">
+                  <span>English</span>
+                </button>
+              </li>
+              <li role="none">
+                <button type="button" class="lang-option" role="menuitemradio" aria-checked="false" data-lang="es">
+                  <span>Español</span>
+                </button>
+              </li>
+              <li role="none">
+                <button type="button" class="lang-option" role="menuitemradio" aria-checked="false" data-lang="pt-BR">
+                  <span>Português (Brasil)</span>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content" class="main-content" role="main">
+      <div class="page-intro">
+        <div class="page-kicker">
+          <span aria-hidden="true">◎</span> <span data-i18n="map.kicker">Global map</span>
+        </div>
+        <h1 class="page-title" data-i18n="map.title">Analog sites map</h1>
+        <p class="page-desc" data-i18n="map.desc">
+          Global map of Moon, Mars, and Europa testing grounds with NASA POWER climate data and site limits.
+        </p>
+      </div>
+
+      <!-- Filter Bar: Target (9 labels), Body (Moon, Mars, Europa), Show climate-only sites -->
+      <section class="map-filter-bar" aria-label="Map filtering controls">
+        <div class="map-filter-inputs">
+          <div class="filter-item">
+            <label for="map-filter-target" class="form-label" style="margin-bottom: 0;" data-i18n="map.filterTarget">Target:</label>
+            <select id="map-filter-target" class="form-select" style="min-width: 200px;">
+              <option value="all">All targets (9)</option>
+              <!-- Filled dynamically with the 9 target labels from ANALOG_DATA.targets -->
+            </select>
+          </div>
+
+          <div class="filter-item">
+            <label for="map-filter-body" class="form-label" style="margin-bottom: 0;" data-i18n="map.filterBody">Body:</label>
+            <select id="map-filter-body" class="form-select" style="min-width: 140px;">
+              <option value="all">All bodies</option>
+              <option value="moon">Moon</option>
+              <option value="mars">Mars</option>
+              <option value="europa">Europa</option>
+            </select>
+          </div>
+
+          <div class="filter-item" style="margin-left: 6px;">
+            <label class="checkbox-label" for="map-filter-climate" style="font-size: 0.86rem; cursor: pointer;">
+              <input type="checkbox" id="map-filter-climate" checked />
+              <span data-i18n="map.showClimateOnly">Show climate-only sites</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="map-filter-stats">
+          <span id="map-sites-counter">Showing 28 of 28 sites</span>
+        </div>
+      </section>
+
+      <!-- Map & Details Layout -->
+      <div class="map-layout">
+        <!-- Leaflet Map Container -->
+        <section class="map-viewport-wrapper" aria-label="Interactive Planetary Analog Map">
+          <div id="leaflet-map" role="region" aria-label="Interactive world map showing planetary analog markers"></div>
+
+          <div id="map-offline-banner" class="map-offline-banner" role="status" hidden data-i18n="map.offlineBanner">
+            Map tiles unavailable offline - site markers and detailed analog data remain interactive.
+          </div>
+
+          <div id="map-empty-banner" class="map-empty-banner" role="status" hidden>
+            <div class="map-empty-card">
+              <p class="empty-state-title" data-i18n="map.emptyTitle">No analog sites match these filters.</p>
+              <p class="empty-state-desc" data-i18n="map.emptyDesc">
+                No sites in the dataset match the selected target, body, and evidence filters.
+              </p>
+              <div class="empty-state-actions">
+                <button type="button" id="btn-reset-map-filters" class="btn btn-primary btn-sm" data-i18n="map.resetFilters">
+                  Reset map filters
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="map-legend" aria-hidden="true">
+            <div class="legend-item">
+              <span class="legend-swatch swatch-blue"></span>
+              <span id="legend-doc-label">Documented analogs</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-swatch swatch-gray"></span>
+              <span id="legend-climate-label">Climate data only</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Side Panel on Desktop / Bottom Sheet on Mobile -->
+        <aside id="site-detail-panel" class="map-inspector" role="complementary" aria-label="Site details panel" aria-live="polite">
+          <div class="bottom-sheet-handle" aria-hidden="true"></div>
+          <div id="inspector-content">
+            <div class="inspector-placeholder">
+              <span style="font-size: 2.2rem; display: block; margin-bottom: 10px;" aria-hidden="true">📍</span>
+              <strong style="color: var(--text-main); display: block; margin-bottom: 6px;" data-i18n="map.selectSiteTitle">Select a site</strong>
+              <span data-i18n="map.selectSiteDesc">Click any blue (documented) or gray (climate-only) marker on the map to view its parameters, simulated targets, strengths and weaknesses, and limits.</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <!-- Accessible Site Coordinates & Elevation Table -->
+      <section style="margin-top: 48px;" aria-labelledby="coords-table-title">
+        <h2 id="coords-table-title" class="page-title" style="font-size: 1.35rem; margin-bottom: 12px;" data-i18n="map.tableTitle">Site coordinates and elevation</h2>
+        <div style="overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md);">
+          <table class="params-table" style="min-width: 650px; padding: 8px;">
+            <thead>
+              <tr>
+                <th scope="col" style="padding: 10px 14px;" data-i18n="map.colSite">Site</th>
+                <th scope="col" style="padding: 10px 14px;" data-i18n="map.colEvidence">Evidence</th>
+                <th scope="col" style="padding: 10px 14px;" data-i18n="map.colLocation">Location</th>
+                <th scope="col" style="padding: 10px 14px;" data-i18n="map.colLat">Latitude</th>
+                <th scope="col" style="padding: 10px 14px;" data-i18n="map.colLon">Longitude</th>
+                <th scope="col" style="padding: 10px 14px;" data-i18n="map.colElev">Elevation</th>
+                <th scope="col" style="padding: 10px 14px; text-align: right;" data-i18n="map.colAction">Action</th>
+              </tr>
+            </thead>
+            <tbody id="coords-table-body">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <!-- Shared Footer -->
+    <footer class="site-footer" role="contentinfo">
+      <div class="footer-container">
+        <div class="footer-brand">
+          <div class="brand">
+            <span class="brand-planet-logo" aria-hidden="true">
+              <svg width="42" height="34" viewBox="0 0 64 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <clipPath id="speculum-footer-planet-clip">
+                    <circle cx="27" cy="27" r="17" />
+                  </clipPath>
+                </defs>
+                <g transform="translate(27 27) rotate(-29)">
+                  <path class="planet-ring-back" d="M -26 0 A 26 7.4 0 0 1 26 0 A 26 6.2 0 0 0 -26 0 Z" />
+                </g>
+                <g clip-path="url(#speculum-footer-planet-clip)">
+                  <circle cx="27" cy="27" r="17" fill="#0d1e3a" />
+                  <circle cx="21" cy="21" r="18" fill="#4670ab" />
+                  <circle cx="15.5" cy="15.5" r="13" fill="#7aa1d4" />
+                  <path d="M 10.5 29 C 9.5 20.5 14 12.5 23 10.5 C 26 9.9 29.5 10.1 32 11 C 26 11.4 20 14 16 18.5 C 12.2 22.8 11 26.2 10.5 29 Z" fill="#efeae0" />
+                  <path d="M 28 15 C 31 15 34 16 35 18 C 33.5 19.5 34 21 37 22 C 40 23 43.5 26 44 31 C 44 38 37 44 28 44 C 24 44 21 42 20 39 C 19 36 22 34 24 33 C 26 32 25 29 23 27.5 C 21 26 22 23 24.5 22 C 27 21 26 18 28 15 Z" fill="#0d1e3a" opacity="0.92" />
+                  <path d="M 15 21 C 17 19.5 20 20 21 22 C 21.5 23.5 19.5 25 18 25.5 C 16.5 26 14 23.5 15 21 Z" fill="#13294b" opacity="0.85" />
+                  <path d="M 13 24.5 C 14.5 23.5 16.5 23.5 17.5 24.5 C 16 25.5 14.5 26 13 24.5 Z" fill="#efeae0" opacity="0.92" />
+                  <path d="M 18.5 15.5 C 21 14 24 14 25.5 15 C 23.5 16.2 21 16.5 18.5 15.5 Z" fill="#efeae0" opacity="0.9" />
+                </g>
+                <circle class="planet-rim" cx="27" cy="27" r="16.7" fill="none" stroke-width="0.9" />
+                <g transform="translate(27 27) rotate(-29)">
+                  <path class="planet-ring-front" d="M -26 0 A 26 8.3 0 0 0 26 0 A 26 5.8 0 0 1 -26 0 Z" />
+                </g>
+                <path class="planet-star" d="M 53 2 L 54.4 8.6 L 61 10 L 54.4 11.4 L 53 18 L 51.6 11.4 L 45 10 L 51.6 8.6 Z" />
+              </svg>
+            </span>
+            <span class="brand-wordmark" role="img" aria-label="SPECULUM">
+              <svg width="136" height="15" viewBox="0 0 216 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 19 2 L 7 2 A 4.5 4.5 0 0 0 2.5 6.5 A 4.5 4.5 0 0 0 7 11 L 15 11 A 4.5 4.5 0 0 1 19.5 15.5 A 4.5 4.5 0 0 1 15 20 L 2 20" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="round" />
+                <path d="M 29.5 21.2 L 29.5 2 L 41.5 2 A 4.5 4.5 0 0 1 46 6.5 A 4.5 4.5 0 0 1 41.5 11 L 29.5 11" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="round" />
+                <path d="M 55.5 2 L 72.5 2 M 55.5 11 L 72.5 11 M 55.5 20 L 72.5 20" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" />
+                <path d="M 100 2 L 88.5 2 A 6 6 0 0 0 82.5 8 L 82.5 14 A 6 6 0 0 0 88.5 20 L 100 20" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="round" />
+                <path d="M 109.5 0.8 L 109.5 14 A 6 6 0 0 0 115.5 20 L 122 20 A 6 6 0 0 0 128 14 L 128 0.8" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="round" />
+                <path d="M 138.5 0.8 L 138.5 20 L 155 20" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="miter" />
+                <path d="M 163.5 0.8 L 163.5 14 A 6 6 0 0 0 169.5 20 L 176 20 A 6 6 0 0 0 182 14 L 182 0.8" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="round" />
+                <path d="M 192.5 21.2 L 192.5 2 L 194 2 L 203 17.5 L 212 2 L 213.5 2 L 213.5 21.2" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </div>
+          <p class="footer-desc" data-i18n="footer.desc">
+            Earth analog sites and similarity calculator for lunar bases and Mars exploration.
+          </p>
+          <p class="footer-credits" data-i18n-html="footer.credits">
+            Meteorological and solar datasets provided by <strong>NASA POWER</strong> (Prediction Of Worldwide Energy Resources) 25-year climatologies.
+          </p>
+        </div>
+
+        <div>
+          <div class="footer-title" data-i18n="footer.pagesTitle">Pages</div>
+          <ul class="footer-links">
+            <li><a href="index.html" data-i18n="nav.overview">Overview</a></li>
+            <li><a href="map.html" data-i18n="nav.map">Map</a></li>
+            <li><a href="finder.html" data-i18n="nav.finder">Finder</a></li>
+            <li><a href="methods.html" data-i18n="nav.methods">Methods</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer-title" data-i18n="footer.methodsTitle">Methods</div>
+          <ul class="footer-links">
+            <li><a href="methods.html#scoring" data-i18n="footer.scoring">Scoring method</a></li>
+            <li><a href="methods.html#confidence" data-i18n="footer.confidence">Confidence rules</a></li>
+            <li><a href="methods.html#parameters" data-i18n="footer.parameters">Parameters</a></li>
+            <li><a href="methods.html#limitations" data-i18n="footer.limitations">Known limitations</a></li>
+            <li><a href="methods.html#sources" data-i18n="footer.sources">Sources</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div data-i18n="footer.madeFor">
+          Made for the NASA Space Apps Challenge 2026
+        </div>
+      </div>
+    </footer>
+
+    <!-- Leaflet JS (locally bundled so the site works offline except for OpenStreetMap tiles) -->
+    <script src="vendor/leaflet/leaflet.js"></script>
+
+    <!-- Data and Application Logic -->
+    <script src="analog_data.js"></script>
+    <script src="i18n.js"></script>
+    <script src="app.js"></script>
+
+    <!-- Map Script -->
+    <script>
+      (function () {
+        const App = window.Speculum || window.AnalogFinder;
+        const I18n = window.SpeculumI18n || null;
+        const data = App ? App.getData() : null;
+        if (!data) return;
+
+        function tr(key, vars, fallback) {
+          return I18n ? I18n.t(key, vars) : (fallback || key);
+        }
+
+        const targetSelect = document.getElementById('map-filter-target');
+        const bodySelect = document.getElementById('map-filter-body');
+        const climateCheckbox = document.getElementById('map-filter-climate');
+        const counterEl = document.getElementById('map-sites-counter');
+        const panelEl = document.getElementById('site-detail-panel');
+        const inspectorContent = document.getElementById('inspector-content');
+        const coordsBody = document.getElementById('coords-table-body');
+        const emptyBannerEl = document.getElementById('map-empty-banner');
+        const offlineBannerEl = document.getElementById('map-offline-banner');
+        const resetMapFiltersBtn = document.getElementById('btn-reset-map-filters');
+        const legendDocEl = document.getElementById('legend-doc-label');
+        const legendClimateEl = document.getElementById('legend-climate-label');
+
+        const docSitesCount = data.sites.filter(s => s.evidence_level === 'documented').length;
+        const climateSitesCount = data.sites.length - docSitesCount;
+
+        function populateFilterOptions() {
+          const prevTarget = targetSelect.value || 'all';
+          const prevBody = bodySelect.value || 'all';
+
+          targetSelect.innerHTML = '';
+          const allTargetOpt = document.createElement('option');
+          allTargetOpt.value = 'all';
+          allTargetOpt.textContent = tr('map.allTargets', { n: data.targets.length }, `All targets (${data.targets.length})`);
+          targetSelect.appendChild(allTargetOpt);
+
+          data.targets.forEach(t => {
+            const opt = document.createElement('option');
+            opt.value = t.id;
+            opt.textContent = I18n ? I18n.tTarget(t, 'label') : (t.label || t.name);
+            targetSelect.appendChild(opt);
+          });
+          targetSelect.value = prevTarget;
+
+          const bodyAllOpt = bodySelect.querySelector('option[value="all"]');
+          const bodyMoonOpt = bodySelect.querySelector('option[value="moon"]');
+          const bodyMarsOpt = bodySelect.querySelector('option[value="mars"]');
+          const bodyEuropaOpt = bodySelect.querySelector('option[value="europa"]');
+          if (bodyAllOpt) bodyAllOpt.textContent = tr('map.allBodies', null, 'All bodies');
+          if (bodyMoonOpt) bodyMoonOpt.textContent = I18n ? I18n.tBody('moon') : 'Moon';
+          if (bodyMarsOpt) bodyMarsOpt.textContent = I18n ? I18n.tBody('mars') : 'Mars';
+          if (bodyEuropaOpt) bodyEuropaOpt.textContent = I18n ? I18n.tBody('europa') : 'Europa';
+          bodySelect.value = prevBody;
+
+          if (legendDocEl) {
+            legendDocEl.textContent = tr('map.legendDoc', { n: docSitesCount }, `Documented analogs (${docSitesCount})`);
+          }
+          if (legendClimateEl) {
+            legendClimateEl.textContent = tr('map.legendClimate', { n: climateSitesCount }, `Climate data only (${climateSitesCount})`);
+          }
+        }
+
+        populateFilterOptions();
+
+        const hasLeaflet = typeof window.L !== 'undefined';
+        let map = null;
+        let markersLayer = null;
+        const markersMap = new Map(); // siteId -> { marker, site }
+        let activeSiteId = null;
+
+        function getTooltipHtml(site) {
+          const isDocumented = site.evidence_level === 'documented';
+          const statusLabel = isDocumented
+            ? tr('map.tooltipDoc', null, 'Documented analog')
+            : tr('map.tooltipClimate', null, 'Climate data only');
+          return `<strong>${App.escapeHtml(site.name)}</strong><br><span style="font-size: 0.75rem; color: #94a3b8;">${App.escapeHtml(statusLabel)}</span>`;
+        }
+
+        function updateMarkerTooltips() {
+          markersMap.forEach(({ marker, site }) => {
+            if (typeof marker.setTooltipContent === 'function') {
+              marker.setTooltipContent(getTooltipHtml(site));
+            }
+          });
+        }
+
+        if (hasLeaflet) {
+          // Initialize Leaflet Map
+          map = L.map('leaflet-map', {
+            center: [20, 0],
+            zoom: 2,
+            minZoom: 1,
+            maxZoom: 18,
+            worldCopyJump: true
+          });
+
+          // OpenStreetMap tile layer
+          const osmTiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors'
+          }).addTo(map);
+
+          osmTiles.on('tileerror', () => {
+            if (offlineBannerEl) offlineBannerEl.hidden = false;
+          });
+          osmTiles.on('tileload', () => {
+            if (offlineBannerEl) offlineBannerEl.hidden = true;
+          });
+
+          markersLayer = L.layerGroup().addTo(map);
+
+          // Create Custom Marker for a site
+          function createMarker(site) {
+            const isDocumented = site.evidence_level === 'documented';
+            const markerClass = isDocumented ? 'marker-documented' : 'marker-climate';
+            const icon = L.divIcon({
+              className: 'custom-leaflet-icon',
+              html: `<div class="leaflet-site-marker ${markerClass}" id="marker-${site.id}" title="${App.escapeHtml(site.name)}"><span class="marker-dot"></span></div>`,
+              iconSize: [24, 24],
+              iconAnchor: [12, 12]
+            });
+
+            const marker = L.marker([site.lat, site.lon], {
+              icon,
+              title: site.name,
+              alt: site.name
+            });
+
+            marker.bindTooltip(getTooltipHtml(site), {
+              direction: 'top',
+              offset: [0, -10]
+            });
+
+            marker.on('click', () => {
+              selectSite(site.id, true);
+            });
+
+            return marker;
+          }
+
+          // Initialize all site markers
+          data.sites.forEach(site => {
+            const marker = createMarker(site);
+            markersMap.set(site.id, { marker, site });
+          });
+        } else if (offlineBannerEl) {
+          offlineBannerEl.removeAttribute('data-i18n');
+          offlineBannerEl.textContent = tr(
+            'map.leafletUnavailable',
+            null,
+            'Interactive map library unavailable. Use the site table below to inspect every analog site.'
+          );
+          offlineBannerEl.hidden = false;
+        }
+
+        function resetMapFilters() {
+          targetSelect.value = 'all';
+          bodySelect.value = 'all';
+          climateCheckbox.checked = true;
+          applyFilters();
+        }
+
+        if (resetMapFiltersBtn) {
+          resetMapFiltersBtn.addEventListener('click', resetMapFilters);
+        }
+
+        // Filtering logic
+        function applyFilters() {
+          const selectedTarget = targetSelect.value;
+          const selectedBody = bodySelect.value;
+          const showClimateOnly = climateCheckbox.checked;
+
+          if (markersLayer) markersLayer.clearLayers();
+          let visibleCount = 0;
+
+          data.sites.forEach(site => {
+            const isDocumented = site.evidence_level === 'documented';
+
+            // Climate-only check
+            if (!showClimateOnly && !isDocumented) {
+              return;
+            }
+
+            // Target check
+            if (selectedTarget !== 'all') {
+              if (!site.simulated_targets || !site.simulated_targets.includes(selectedTarget)) {
+                return;
+              }
+            }
+
+            // Body check (Moon, Mars, Europa)
+            if (selectedBody !== 'all') {
+              const matchesBody = (site.simulated_targets || []).some(tId => {
+                const targetDef = data.targets.find(t => t.id === tId);
+                return targetDef && targetDef.body === selectedBody;
+              });
+              if (!matchesBody) {
+                return;
+              }
+            }
+
+            if (markersLayer) {
+              const item = markersMap.get(site.id);
+              if (item) {
+                markersLayer.addLayer(item.marker);
+              }
+            }
+            visibleCount++;
+          });
+
+          counterEl.textContent = tr(
+            'map.showingSites',
+            { visible: visibleCount, total: data.sites.length },
+            `Showing ${visibleCount} of ${data.sites.length} sites`
+          );
+          if (emptyBannerEl) {
+            emptyBannerEl.hidden = visibleCount > 0;
+          }
+          renderCoordinatesTable(selectedTarget, selectedBody, showClimateOnly, visibleCount);
+        }
+
+        function formatLocation(site) {
+          const regionStr = site.region ? (I18n ? I18n.tRegion(site.region) : site.region) : '';
+          const countryStr = I18n ? I18n.tCountry(site.country) : site.country;
+          return `${regionStr ? regionStr + ', ' : ''}${countryStr}`;
+        }
+
+        // Render Side Panel / Bottom Sheet
+        function selectSite(siteId, panTo = false) {
+          activeSiteId = siteId;
+          const site = data.sites.find(s => s.id === siteId);
+          if (!site) return;
+
+          // Update active state on markers
+          document.querySelectorAll('.leaflet-site-marker').forEach(el => {
+            el.classList.remove('marker-active');
+          });
+          const markerEl = document.getElementById(`marker-${site.id}`);
+          if (markerEl) {
+            markerEl.classList.add('marker-active');
+          }
+
+          // Pan to site if requested
+          if (panTo && map) {
+            map.setView([site.lat, site.lon], Math.max(map.getZoom(), 4), {
+              animate: true
+            });
+          }
+
+          // Sync URL hash
+          if (window.location.hash !== `#${site.id}`) {
+            history.replaceState(null, '', `#${site.id}`);
+          }
+
+          // Compute extreme statements (Strengths and weaknesses rule engine)
+          const extremeStatements = App.computeSiteExtremeStatements
+            ? App.computeSiteExtremeStatements(site, data.sites, data.parameters)
+            : [];
+
+          // Compute limitations list
+          const limitations = App.getSiteLimitations
+            ? App.getSiteLimitations(site, data)
+            : data.universal_limits || [];
+
+          // Resolve simulated target labels
+          const targetPills = (site.simulated_targets || []).map(tId => {
+            const targetDef = data.targets.find(t => t.id === tId);
+            const tLabel = targetDef
+              ? (I18n ? I18n.tTarget(targetDef, 'label') : targetDef.label)
+              : tId;
+            return `<span class="target-pill">${App.escapeHtml(tLabel)}</span>`;
+          }).join('');
+
+          // Collect sources
+          const siteSources = [];
+          const seenSrcIds = new Set();
+          (site.source_ids || []).forEach(sId => {
+            if (!seenSrcIds.has(sId)) {
+              seenSrcIds.add(sId);
+              const sDef = (data.sources || []).find(s => s.id === sId);
+              siteSources.push(sDef || { id: sId, title: sId });
+            }
+          });
+          if (site.exploration_use && Array.isArray(site.exploration_use.source_ids)) {
+            site.exploration_use.source_ids.forEach(sId => {
+              if (!seenSrcIds.has(sId)) {
+                seenSrcIds.add(sId);
+                const sDef = (data.sources || []).find(s => s.id === sId);
+                siteSources.push(sDef || { id: sId, title: sId });
+              }
+            });
+          }
+          Object.values(site.parameters || {}).forEach(pVal => {
+            if (pVal && pVal.source_id && !seenSrcIds.has(pVal.source_id)) {
+              seenSrcIds.add(pVal.source_id);
+              const sDef = (data.sources || []).find(s => s.id === pVal.source_id);
+              siteSources.push(sDef || { id: pVal.source_id, title: pVal.source_id });
+            }
+          });
+
+          // Build Parameters Table Rows
+          const paramRows = Object.keys(site.parameters || {}).map(pKey => {
+            const pDef = data.parameters.find(p => p.id === pKey) || { id: pKey, name: pKey, unit: '' };
+            const pVal = site.parameters[pKey];
+            const paramName = I18n ? I18n.tParam(pDef, 'name') : pDef.name;
+            const formattedVal = App.formatParameterValue(pDef, pVal);
+            const rawUnit = pVal.unit || pDef.unit || '';
+            const unitStr = I18n && rawUnit ? I18n.tUnit(rawUnit) : rawUnit;
+
+            let rangeText = '-';
+            if (pVal && (pVal.min !== undefined || pVal.max !== undefined)) {
+              if (pVal.min !== undefined && pVal.max !== undefined) {
+                rangeText = `${pVal.min} – ${pVal.max}${unitStr ? ' ' + unitStr : ''}`;
+              } else if (pVal.min !== undefined) {
+                rangeText = `≥ ${pVal.min}${unitStr ? ' ' + unitStr : ''}`;
+              } else if (pVal.max !== undefined) {
+                rangeText = `≤ ${pVal.max}${unitStr ? ' ' + unitStr : ''}`;
+              }
+            }
+
+            const badgeHtml = App.renderConfidenceBadge(pVal.confidence);
+            const sourceHtml = pVal.source_id ? App.renderSourceLink(pVal.source_id, data.sources) : '-';
+
+            return `
+              <tr>
+                <td><strong>${App.escapeHtml(paramName)}</strong></td>
+                <td class="val-col">${App.escapeHtml(formattedVal)}</td>
+                <td class="range-col">${App.escapeHtml(rangeText)}</td>
+                <td>${badgeHtml}</td>
+                <td>${sourceHtml}</td>
+              </tr>
+            `;
+          }).join('');
+
+          // Flags summary
+          const stationFlag = site.flags && site.flags.has_support_station
+            ? `<div class="flag-item"><span class="flag-icon" aria-hidden="true" style="color: #10b981;">✓</span><div><strong>${App.escapeHtml(tr('map.stationLabel', null, 'Support station:'))}</strong> ${App.escapeHtml(tr('map.stationYes', null, 'Permanent analog station'))}</div></div>`
+            : `<div class="flag-item"><span class="flag-icon" aria-hidden="true" style="color: var(--text-muted);">○</span><div><strong>${App.escapeHtml(tr('map.stationLabel', null, 'Support station:'))}</strong> ${App.escapeHtml(tr('map.stationNo', null, 'None (field expedition site)'))}</div></div>`;
+
+          const protectedFlag = site.flags && site.flags.protected_area
+            ? `<div class="flag-item"><span class="flag-icon" aria-hidden="true" style="color: #f59e0b;">⚠</span><div><strong>${App.escapeHtml(tr('map.protectedLabel', null, 'Protected area:'))}</strong> ${App.escapeHtml(tr('map.protectedYes', null, 'Yes (permits required)'))}</div></div>`
+            : `<div class="flag-item"><span class="flag-icon" aria-hidden="true" style="color: var(--text-muted);">○</span><div><strong>${App.escapeHtml(tr('map.protectedLabel', null, 'Protected area:'))}</strong> ${App.escapeHtml(tr('map.protectedNo', null, 'No'))}</div></div>`;
+
+          const rawAccessNote = site.flags && site.flags.access_note ? site.flags.access_note : '';
+          const accessNoteText = rawAccessNote
+            ? (I18n ? I18n.tAccessNote(site) : rawAccessNote)
+            : tr('map.accessNoteNone', null, 'None reported.');
+          const accessNoteFlag = `<div class="flag-item"><span class="flag-icon" aria-hidden="true">ℹ</span><div><strong>${App.escapeHtml(tr('map.accessNoteLabel', null, 'Access note:'))}</strong> ${App.escapeHtml(accessNoteText)}</div></div>`;
+
+          // Evidence Level Badge
+          const climateBadgeHtml = site.evidence_level === 'climate_only'
+            ? `<div class="badge-climate-only"><span aria-hidden="true">◈</span> ${App.escapeHtml(tr('map.panelClimateBadge', null, 'Climate data only: no literature source yet'))}</div>`
+            : '';
+
+          const summaryText = I18n ? I18n.tSiteSummary(site) : (site.summary || '');
+
+          // How this site helps exploration
+          const explorationUse = App.getSiteExplorationUse ? App.getSiteExplorationUse(site, data) : null;
+          const explorationSectionHtml = explorationUse
+            ? `
+              <div class="panel-section" id="panel-exploration-use">
+                <div class="panel-section-title">${App.escapeHtml(tr('map.explorationTitle', null, 'How this site helps exploration'))}</div>
+                ${explorationUse.tags.length ? `
+                  <div class="use-tag-chips">
+                    ${explorationUse.tags.map(t => `<span class="use-tag-chip">${App.escapeHtml(t.label)}</span>`).join('')}
+                  </div>
+                ` : ''}
+                ${explorationUse.explorationValue ? `<p class="exploration-value-text">${App.escapeHtml(explorationUse.explorationValue)}</p>` : ''}
+                ${explorationUse.sourceIds.length ? `
+                  <div class="exploration-sources-row">
+                    <span>${App.escapeHtml(tr('finder.sourcesLabel', null, 'Sources:'))}</span>
+                    ${explorationUse.sourceIds.map(sId => App.renderSourceLink(sId, data.sources)).join(' ')}
+                  </div>
+                ` : ''}
+              </div>
+            `
+            : `
+              <div class="panel-section" id="panel-exploration-use">
+                <div class="panel-section-title">${App.escapeHtml(tr('map.explorationTitle', null, 'How this site helps exploration'))}</div>
+                <p class="text-muted" style="font-size: 0.8rem; margin: 0;">${App.escapeHtml(tr('map.explorationEmpty', null, 'No documented exploration campaign recorded yet (climate-only candidate).'))}</p>
+              </div>
+            `;
+
+          // Where the analogy breaks down
+          const analogyGaps = App.computeAnalogyGaps ? App.computeAnalogyGaps(site, data) : { gravityLine: '', bodies: [] };
+          const breaksDownBodiesHtml = analogyGaps.bodies.length
+            ? analogyGaps.bodies.map(b => `
+                <div class="breaks-down-group">
+                  <div class="breaks-down-group-header">
+                    <span class="breaks-down-group-title">${App.escapeHtml(b.label)}</span>
+                    ${b.sourceId ? App.renderSourceLink(b.sourceId, data.sources) : ''}
+                  </div>
+                  ${b.items.length ? `
+                    <div class="breaks-down-items">
+                      ${b.items.map(it => `
+                        <div class="breaks-down-item">
+                          <div class="breaks-down-param">${App.escapeHtml(it.parameterName)}</div>
+                          <div class="breaks-down-values">
+                            <span><strong>${App.escapeHtml(tr('map.breaksDownSite', null, 'Site'))}:</strong> <span class="mono">${App.escapeHtml(it.siteValueStr)}</span></span>
+                            <span><strong>${App.escapeHtml(tr('map.breaksDownReference', null, 'Reference'))}:</strong> ${App.escapeHtml(it.refText)}</span>
+                          </div>
+                          <div class="breaks-down-gap">${App.escapeHtml(it.gapText)}</div>
+                        </div>
+                      `).join('')}
+                    </div>
+                  ` : `<p class="text-muted" style="font-size: 0.78rem; margin: 0;">${App.escapeHtml(tr('map.breaksDownNoMatch', null, 'None of the reference parameters for this body are recorded at this site.'))}</p>`}
+                </div>
+              `).join('')
+            : `<p class="text-muted" style="font-size: 0.8rem; margin: 0 0 8px 0;">${App.escapeHtml(tr('map.breaksDownNoTargetBody', null, 'No Moon or Mars target is assigned yet (climate-only candidate).'))}</p>`;
+
+          const breaksDownSectionHtml = `
+            <div class="panel-section" id="panel-breaks-down">
+              <div class="panel-section-title">${App.escapeHtml(tr('map.breaksDownTitle', null, 'Where the analogy breaks down'))}</div>
+              ${breaksDownBodiesHtml}
+              ${analogyGaps.gravityLine ? `<div class="breaks-down-gravity">${App.escapeHtml(analogyGaps.gravityLine)}</div>` : ''}
+            </div>
+          `;
+
+          // Build Panel HTML
+          inspectorContent.innerHTML = `
+            <div class="panel-header">
+              <div>
+                ${climateBadgeHtml}
+                <h2 class="panel-title">${App.escapeHtml(site.name)}</h2>
+                <div class="panel-location">${App.escapeHtml(formatLocation(site))} &bull; <span class="mono">${site.lat.toFixed(2)}&deg;, ${site.lon.toFixed(2)}&deg;</span></div>
+              </div>
+              <button type="button" class="panel-close-btn" id="panel-close-btn" aria-label="${App.escapeHtml(tr('map.panelCloseAria', null, 'Close details panel'))}">&times;</button>
+            </div>
+
+            <div class="coord-notice">
+              <span aria-hidden="true">&iexcl;</span> ${App.escapeHtml(tr('map.coordNotice', null, 'All coordinates are approximate (regional / grid-cell center).'))}
+            </div>
+
+            <p class="panel-summary">${App.escapeHtml(summaryText)}</p>
+
+            <div class="panel-section">
+              <div class="panel-section-title">${App.escapeHtml(tr('map.docAnalogFor', null, 'Documented analog for'))}</div>
+              <div class="target-pills-list">
+                ${targetPills || `<span class="text-muted" style="font-size: 0.8rem;">${App.escapeHtml(tr('map.noneRecorded', null, 'None recorded'))}</span>`}
+              </div>
+            </div>
+
+            ${explorationSectionHtml}
+
+            <div class="panel-section">
+              <div class="panel-section-title">${App.escapeHtml(tr('map.strengthsTitle', null, 'Strengths and weaknesses'))}</div>
+              <p style="font-size: 0.76rem; color: var(--text-muted); margin-bottom: 8px;">
+                ${tr('map.strengthsSub', { n: data.sites.length }, `Top <span class="mono">3</span> most extreme traits relative to all <span class="mono">${data.sites.length}</span> sites:`)}
+              </p>
+              <ul class="extreme-statements-list">
+                ${extremeStatements.length ? extremeStatements.map(st => `
+                  <li class="extreme-statement-item">
+                    <span class="statement-glyph" aria-hidden="true">&bull;</span>
+                    <span>${App.escapeHtml(st.text).replace(/(\d+%)/g, '<span class="mono">$1</span>')}</span>
+                  </li>
+                `).join('') : `<li class="text-muted" style="font-size: 0.8rem;">${App.escapeHtml(tr('map.noNumericDist', null, 'No numeric distributions available.'))}</li>`}
+              </ul>
+            </div>
+
+            <div class="panel-section">
+              <div class="panel-section-title">${App.escapeHtml(tr('map.siteParamsTitle', null, 'Site parameters'))}</div>
+              <div style="overflow-x: auto;">
+                <table class="panel-params-table">
+                  <thead>
+                    <tr>
+                      <th scope="col">${App.escapeHtml(tr('map.colParameter', null, 'Parameter'))}</th>
+                      <th scope="col">${App.escapeHtml(tr('map.colValue', null, 'Value'))}</th>
+                      <th scope="col">${App.escapeHtml(tr('map.colRange', null, 'Range'))}</th>
+                      <th scope="col">${App.escapeHtml(tr('map.colConfidence', null, 'Confidence'))}</th>
+                      <th scope="col">${App.escapeHtml(tr('map.colSource', null, 'Source'))}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${paramRows || `<tr><td colspan="5" class="text-muted">${App.escapeHtml(tr('map.noMeasurements', null, 'No measurements recorded.'))}</td></tr>`}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="panel-section">
+              <div class="panel-section-title">${App.escapeHtml(tr('map.flagsTitle', null, 'Flags and access'))}</div>
+              <div class="flags-grid">
+                ${stationFlag}
+                ${protectedFlag}
+                ${accessNoteFlag}
+              </div>
+            </div>
+
+            ${breaksDownSectionHtml}
+
+            <div class="panel-section">
+              <div class="panel-section-title">${App.escapeHtml(tr('map.notSimTitle', null, 'What this site does NOT simulate'))}</div>
+              <p style="font-size: 0.76rem; color: var(--text-muted); margin-bottom: 8px;">
+                ${App.escapeHtml(tr('map.notSimSub', null, 'Conditions that differ from Moon and Mars:'))}
+              </p>
+              <ul class="limitations-list">
+                ${limitations.map(lim => `
+                  <li class="limitation-item">
+                    <span class="limitation-icon" aria-hidden="true">&times;</span>
+                    <span>${App.escapeHtml(lim)}</span>
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+
+            <div class="panel-section">
+              <div class="panel-section-title">${App.escapeHtml(tr('map.sourcesTitle', { n: siteSources.length }, `Sources (${siteSources.length})`))}</div>
+              <div class="panel-sources-list">
+                ${siteSources.length ? siteSources.map(s => {
+                  let linkHtml = '';
+                  if (s.doi) {
+                    linkHtml = `<div style="margin-top: 4px;"><a href="https://doi.org/${encodeURIComponent(s.doi)}" target="_blank" rel="noopener noreferrer" class="source-link">DOI: ${App.escapeHtml(s.doi)} <span class="ext-icon" aria-hidden="true">&nearr;</span></a></div>`;
+                  } else if (s.url) {
+                    linkHtml = `<div style="margin-top: 4px;"><a href="${App.escapeHtml(s.url)}" target="_blank" rel="noopener noreferrer" class="source-link">${App.escapeHtml(tr('map.viewPub', null, 'View publication'))} <span class="ext-icon" aria-hidden="true">&nearr;</span></a></div>`;
+                  }
+                  return `
+                    <div class="panel-source-item">
+                      <div>
+                        <span class="panel-source-id">${App.escapeHtml(s.id)}</span>
+                        <strong>${App.escapeHtml(s.title || s.id)}</strong>${s.year ? ` (${App.escapeHtml(String(s.year))})` : ''}
+                      </div>
+                      ${s.authors ? `<div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;">${App.escapeHtml(s.authors)}</div>` : ''}
+                      ${linkHtml}
+                    </div>
+                  `;
+                }).join('') : `<span class="text-muted" style="font-size: 0.8rem;">${App.escapeHtml(tr('map.noSourcesSite', null, 'No literature sources recorded for this site.'))}</span>`}
+              </div>
+              <a href="finder.html?site=${encodeURIComponent(site.id)}" class="panel-action-btn">
+                ${App.escapeHtml(tr('map.openInFinder', null, 'Open in finder →'))}
+              </a>
+            </div>
+          `;
+
+          // Show bottom sheet on mobile
+          panelEl.classList.add('sheet-open');
+
+          // Hook close button
+          const closeBtn = document.getElementById('panel-close-btn');
+          if (closeBtn) {
+            closeBtn.addEventListener('click', closePanel);
+          }
+
+          // Highlight table row
+          document.querySelectorAll('.site-table-row').forEach(row => {
+            if (row.getAttribute('data-site-id') === siteId) {
+              row.style.background = 'var(--accent-subtle)';
+            } else {
+              row.style.background = 'transparent';
+            }
+          });
+        }
+
+        function renderPlaceholder() {
+          inspectorContent.innerHTML = `
+            <div class="inspector-placeholder">
+              <span style="font-size: 2.2rem; display: block; margin-bottom: 10px;" aria-hidden="true">📍</span>
+              <strong style="color: var(--text-main); display: block; margin-bottom: 6px;">${App.escapeHtml(tr('map.selectSiteTitle', null, 'Select a site'))}</strong>
+              <span>${App.escapeHtml(tr('map.selectSiteDesc', null, 'Click any blue (documented) or gray (climate-only) marker on the map to view its parameters, simulated targets, strengths and weaknesses, and limits.'))}</span>
+            </div>
+          `;
+        }
+
+        function closePanel() {
+          activeSiteId = null;
+          panelEl.classList.remove('sheet-open');
+          document.querySelectorAll('.leaflet-site-marker').forEach(el => {
+            el.classList.remove('marker-active');
+          });
+          document.querySelectorAll('.site-table-row').forEach(row => {
+            row.style.background = 'transparent';
+          });
+          history.replaceState(null, '', window.location.pathname + window.location.search);
+          renderPlaceholder();
+        }
+
+        // Render accessible table
+        function renderCoordinatesTable(selectedTarget, selectedBody, showClimateOnly, visibleCount) {
+          coordsBody.innerHTML = '';
+          if (visibleCount === 0) {
+            const emptyTr = document.createElement('tr');
+            emptyTr.className = 'empty-table-row';
+            emptyTr.innerHTML = `
+              <td colspan="7" style="padding: 28px 16px; text-align: center; color: var(--text-secondary);">
+                <div style="font-weight: 600; color: var(--text-main); margin-bottom: 6px;">${App.escapeHtml(tr('map.emptyTitle', null, 'No analog sites match these filters.'))}</div>
+                <div style="font-size: 0.85rem; margin-bottom: 12px;">${App.escapeHtml(tr('map.emptyTableHint', null, 'Try clearing your target or body filter, or enable “Show climate-only sites”.'))}</div>
+                <button type="button" id="btn-table-reset-filters" class="btn btn-secondary btn-sm">${App.escapeHtml(tr('map.resetFilters', null, 'Reset map filters'))}</button>
+              </td>
+            `;
+            coordsBody.appendChild(emptyTr);
+            const btn = document.getElementById('btn-table-reset-filters');
+            if (btn) btn.addEventListener('click', resetMapFilters);
+            return;
+          }
+
+          data.sites.forEach(site => {
+            const isDocumented = site.evidence_level === 'documented';
+            if (!showClimateOnly && !isDocumented) return;
+            if (selectedTarget !== 'all' && (!site.simulated_targets || !site.simulated_targets.includes(selectedTarget))) return;
+            if (selectedBody !== 'all') {
+              const matchesBody = (site.simulated_targets || []).some(tId => {
+                const targetDef = data.targets.find(t => t.id === tId);
+                return targetDef && targetDef.body === selectedBody;
+              });
+              if (!matchesBody) return;
+            }
+
+            const rowEl = document.createElement('tr');
+            rowEl.className = 'site-table-row';
+            rowEl.setAttribute('data-site-id', site.id);
+            if (activeSiteId === site.id) {
+              rowEl.style.background = 'var(--accent-subtle)';
+            }
+
+            const altParam = site.parameters && site.parameters.altitude;
+            const altText = altParam && typeof altParam.typical === 'number' ? `${altParam.typical} m` : '-';
+            const badgeText = isDocumented
+              ? tr('map.badgeDoc', null, 'Documented')
+              : tr('map.badgeClimate', null, 'Climate only');
+
+            rowEl.innerHTML = `
+              <td style="padding: 10px 14px;"><strong>${App.escapeHtml(site.name)}</strong></td>
+              <td style="padding: 10px 14px;">
+                <span class="badge ${isDocumented ? 'badge-conf-high' : 'badge-conf-low'}">
+                  ${App.escapeHtml(badgeText)}
+                </span>
+              </td>
+              <td style="padding: 10px 14px; color: var(--text-secondary);">${App.escapeHtml(formatLocation(site))}</td>
+              <td style="padding: 10px 14px; font-family: var(--font-mono);">${site.lat.toFixed(2)}&deg;</td>
+              <td style="padding: 10px 14px; font-family: var(--font-mono);">${site.lon.toFixed(2)}&deg;</td>
+              <td style="padding: 10px 14px; font-family: var(--font-mono);">${altText}</td>
+              <td style="padding: 10px 14px; text-align: right;">
+                <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 0.78rem;" data-site-btn="${App.escapeHtml(site.id)}">
+                  ${App.escapeHtml(tr('map.btnInspect', null, 'Inspect'))}
+                </button>
+              </td>
+            `;
+
+            rowEl.querySelector('[data-site-btn]').addEventListener('click', () => {
+              selectSite(site.id, true);
+              window.scrollTo({ top: 180, behavior: 'smooth' });
+            });
+
+            coordsBody.appendChild(rowEl);
+          });
+        }
+
+        // Event listeners for filters
+        targetSelect.addEventListener('change', applyFilters);
+        bodySelect.addEventListener('change', applyFilters);
+        climateCheckbox.addEventListener('change', applyFilters);
+
+        // Live language switch listener
+        document.addEventListener('speculum:langchange', () => {
+          populateFilterOptions();
+          updateMarkerTooltips();
+          if (!hasLeaflet && offlineBannerEl) {
+            offlineBannerEl.textContent = tr(
+              'map.leafletUnavailable',
+              null,
+              'Interactive map library unavailable. Use the site table below to inspect every analog site.'
+            );
+          }
+          applyFilters();
+          if (activeSiteId) {
+            selectSite(activeSiteId, false);
+          } else {
+            renderPlaceholder();
+          }
+        });
+
+        // Initial filter & render
+        applyFilters();
+
+        // Support opening a site directly from the URL hash (e.g. map.html#haughton_devon)
+        function checkHash() {
+          const hash = window.location.hash.replace(/^#/, '');
+          if (hash) {
+            const site = data.sites.find(s => s.id === hash);
+            if (site) {
+              selectSite(site.id, true);
+            }
+          }
+        }
+
+        window.addEventListener('hashchange', checkHash);
+        // Check hash after slight delay to ensure Leaflet map is sized
+        setTimeout(checkHash, 100);
+      })();
+    </script>
+  </body>
+</html>

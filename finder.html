@@ -1,0 +1,836 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Finder - Speculum</title>
+    <meta name="description" content="Rank Earth analog sites for Moon, Mars, and Europa targets using NASA POWER climate data and mission weights." />
+    <meta property="og:title" content="Finder - Speculum" />
+    <meta property="og:description" content="Rank Earth analog sites for Moon, Mars, and Europa targets using NASA POWER climate data and mission weights." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-i18n-page-title="meta.finderTitle" data-i18n-page-desc="meta.finderDesc">
+    <a href="#main-content" class="skip-link" data-i18n="skip.link">Skip to main content</a>
+
+    <!-- Shared Header with Speculum Blue Orbit Branding -->
+    <header class="site-header" role="banner">
+      <div class="header-container">
+        <a href="index.html" class="brand" aria-label="Speculum Home" data-i18n-aria="brand.homeAria">
+          <span class="brand-planet-logo" aria-hidden="true">
+            <svg width="46" height="38" viewBox="0 0 64 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <clipPath id="speculum-planet-clip">
+                  <circle cx="27" cy="27" r="17" />
+                </clipPath>
+              </defs>
+              <g transform="translate(27 27) rotate(-29)">
+                <path class="planet-ring-back" d="M -26 0 A 26 7.4 0 0 1 26 0 A 26 6.2 0 0 0 -26 0 Z" />
+              </g>
+              <g clip-path="url(#speculum-planet-clip)">
+                <circle cx="27" cy="27" r="17" fill="#0d1e3a" />
+                <circle cx="21" cy="21" r="18" fill="#4670ab" />
+                <circle cx="15.5" cy="15.5" r="13" fill="#7aa1d4" />
+                <path d="M 10.5 29 C 9.5 20.5 14 12.5 23 10.5 C 26 9.9 29.5 10.1 32 11 C 26 11.4 20 14 16 18.5 C 12.2 22.8 11 26.2 10.5 29 Z" fill="#efeae0" />
+                <path d="M 28 15 C 31 15 34 16 35 18 C 33.5 19.5 34 21 37 22 C 40 23 43.5 26 44 31 C 44 38 37 44 28 44 C 24 44 21 42 20 39 C 19 36 22 34 24 33 C 26 32 25 29 23 27.5 C 21 26 22 23 24.5 22 C 27 21 26 18 28 15 Z" fill="#0d1e3a" opacity="0.92" />
+                <path d="M 15 21 C 17 19.5 20 20 21 22 C 21.5 23.5 19.5 25 18 25.5 C 16.5 26 14 23.5 15 21 Z" fill="#13294b" opacity="0.85" />
+                <path d="M 13 24.5 C 14.5 23.5 16.5 23.5 17.5 24.5 C 16 25.5 14.5 26 13 24.5 Z" fill="#efeae0" opacity="0.92" />
+                <path d="M 18.5 15.5 C 21 14 24 14 25.5 15 C 23.5 16.2 21 16.5 18.5 15.5 Z" fill="#efeae0" opacity="0.9" />
+              </g>
+              <circle class="planet-rim" cx="27" cy="27" r="16.7" fill="none" stroke-width="0.9" />
+              <g transform="translate(27 27) rotate(-29)">
+                <path class="planet-ring-front" d="M -26 0 A 26 8.3 0 0 0 26 0 A 26 5.8 0 0 1 -26 0 Z" />
+              </g>
+              <path class="planet-star" d="M 53 2 L 54.4 8.6 L 61 10 L 54.4 11.4 L 53 18 L 51.6 11.4 L 45 10 L 51.6 8.6 Z" />
+            </svg>
+          </span>
+          <span class="brand-wordmark" role="img" aria-label="SPECULUM">
+            <svg width="148" height="16" viewBox="0 0 216 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 19 2 L 7 2 A 4.5 4.5 0 0 0 2.5 6.5 A 4.5 4.5 0 0 0 7 11 L 15 11 A 4.5 4.5 0 0 1 19.5 15.5 A 4.5 4.5 0 0 1 15 20 L 2 20" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="round" />
+              <path d="M 29.5 21.2 L 29.5 2 L 41.5 2 A 4.5 4.5 0 0 1 46 6.5 A 4.5 4.5 0 0 1 41.5 11 L 29.5 11" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="round" />
+              <path d="M 55.5 2 L 72.5 2 M 55.5 11 L 72.5 11 M 55.5 20 L 72.5 20" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" />
+              <path d="M 100 2 L 88.5 2 A 6 6 0 0 0 82.5 8 L 82.5 14 A 6 6 0 0 0 88.5 20 L 100 20" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="round" />
+              <path d="M 109.5 0.8 L 109.5 14 A 6 6 0 0 0 115.5 20 L 122 20 A 6 6 0 0 0 128 14 L 128 0.8" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="round" />
+              <path d="M 138.5 0.8 L 138.5 20 L 155 20" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="miter" />
+              <path d="M 163.5 0.8 L 163.5 14 A 6 6 0 0 0 169.5 20 L 176 20 A 6 6 0 0 0 182 14 L 182 0.8" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="round" />
+              <path d="M 192.5 21.2 L 192.5 2 L 194 2 L 203 17.5 L 212 2 L 213.5 2 L 213.5 21.2" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="round" />
+            </svg>
+          </span>
+        </a>
+
+        <button type="button" class="mobile-nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Toggle navigation menu" data-i18n="nav.menu" data-i18n-aria="nav.toggleAria">
+          Menu
+        </button>
+
+        <nav id="primary-nav" class="site-nav" role="navigation" aria-label="Primary Navigation" data-i18n-aria="nav.aria">
+          <a href="index.html" class="nav-link" data-i18n="nav.overview">Overview</a>
+          <a href="map.html" class="nav-link" data-i18n="nav.map">Map</a>
+          <a href="finder.html" class="nav-link active" aria-current="page" data-i18n="nav.finder">Finder</a>
+          <a href="methods.html" class="nav-link" data-i18n="nav.methods">Methods</a>
+          <div class="lang-dropdown" id="lang-dropdown">
+            <button
+              type="button"
+              id="lang-toggle-btn"
+              class="nav-lang-btn"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="lang-dropdown-menu"
+              aria-label="Language: English. Select language"
+              title="Select language"
+            >
+              <svg class="lang-globe-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M2 12h20"></path>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+              </svg>
+              <span class="lang-code">English</span>
+              <svg class="lang-chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <ul id="lang-dropdown-menu" class="lang-dropdown-menu" role="menu" aria-label="Select language" hidden>
+              <li role="none">
+                <button type="button" class="lang-option active" role="menuitemradio" aria-checked="true" data-lang="en">
+                  <span>English</span>
+                </button>
+              </li>
+              <li role="none">
+                <button type="button" class="lang-option" role="menuitemradio" aria-checked="false" data-lang="es">
+                  <span>Español</span>
+                </button>
+              </li>
+              <li role="none">
+                <button type="button" class="lang-option" role="menuitemradio" aria-checked="false" data-lang="pt-BR">
+                  <span>Português (Brasil)</span>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content" class="main-content" role="main">
+      <div class="page-intro">
+        <div class="page-kicker">
+          <span aria-hidden="true">&#9881;</span> <span data-i18n="finder.kicker">Site ranking calculator</span>
+        </div>
+        <h1 class="page-title" data-i18n="finder.title">Analog finder</h1>
+        <p class="page-desc" data-i18n="finder.desc">
+          Choose what you are testing and the target environment to rank Earth sites by directional percentiles and mission weights.
+        </p>
+      </div>
+
+      <div class="finder-layout">
+        <!-- Calculator Form Column -->
+        <aside class="finder-controls" aria-label="Similarity Calculator Controls">
+          <form id="finder-form" onsubmit="return false;">
+            <div class="control-section">
+              <label for="select-profile" class="control-title" data-i18n="finder.q1">1. What are you testing?</label>
+              <select id="select-profile" class="form-select finder-select">
+                <!-- Populated dynamically from ANALOG_DATA.profiles -->
+              </select>
+              <div id="profile-description" class="control-description"></div>
+            </div>
+
+            <div class="control-section">
+              <label for="select-target" class="control-title" data-i18n="finder.q2">2. Which environment do you want to simulate?</label>
+              <select id="select-target" class="form-select finder-select">
+                <!-- Populated dynamically from ANALOG_DATA.targets (label) -->
+              </select>
+              <div id="target-description" class="control-description"></div>
+            </div>
+
+            <div class="control-section">
+              <div class="control-title" data-i18n="finder.q3">3. Logistics and site pool</div>
+              <div class="checkbox-stack">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="check-station-only" />
+                  <span data-i18n="finder.onlyStation">Only sites with a support station</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="check-exclude-protected" />
+                  <span data-i18n="finder.excludeProtected">Exclude protected areas</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="check-exclude-access" />
+                  <span data-i18n="finder.excludeAccess">Exclude sites with access problems</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="check-climate-only" />
+                  <span data-i18n="finder.includeClimateOnly">Include climate-only sites</span>
+                </label>
+              </div>
+            </div>
+
+            <details id="advanced-section" class="advanced-details">
+              <summary class="advanced-summary">
+                <span data-i18n="finder.advanced">Advanced</span>
+                <span class="advanced-summary-hint" id="advanced-count-hint">Weights (0–5)</span>
+              </summary>
+              <div id="advanced-sliders" class="slider-list">
+                <!-- Populated dynamically: 0-5 slider per target parameter -->
+              </div>
+              <div class="advanced-actions">
+                <button type="button" id="btn-reset-weights" class="btn btn-secondary btn-sm" data-i18n="finder.resetWeights">
+                  Reset to profile weights
+                </button>
+              </div>
+            </details>
+          </form>
+
+          <p class="scoring-disclaimer" data-i18n="finder.disclaimer">
+            The score ranks the candidate sites against each other within the selected pool and is not an absolute similarity to the target.
+          </p>
+        </aside>
+
+        <!-- Ranked Results Column -->
+        <section class="finder-results" aria-live="polite" aria-label="Ranking Results">
+          <div class="finder-results-header">
+            <div>
+              <h2 id="results-headline" style="font-size: 1.35rem; font-weight: 700;" data-i18n="finder.resultsHeadline">Ranked sites</h2>
+              <div id="results-meta" class="results-count">Calculating...</div>
+            </div>
+            <div>
+              <button type="button" id="btn-download-csv" class="btn btn-secondary btn-sm" data-i18n="finder.downloadCsv">
+                Download CSV
+              </button>
+            </div>
+          </div>
+
+          <div class="tier-legend-bar">
+            <div>
+              <span class="badge badge-tier-a" style="margin-right: 6px;" data-i18n="finder.tierALabel">Documented analog of this target</span>
+              <span data-i18n="finder.tierADesc">Published analog studies cite this site for this target.</span>
+            </div>
+            <div>
+              <span class="badge badge-tier-b" style="margin-right: 6px;" data-i18n="finder.tierBLabel">Similar climate, no documented analog</span>
+              <span data-i18n="finder.tierBDesc">Similar climate, with no published study linking this site to this target.</span>
+            </div>
+          </div>
+
+          <div id="ranked-cards-list">
+            <!-- Rendered dynamically (top 10 results) -->
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Shared Footer -->
+    <footer class="site-footer" role="contentinfo">
+      <div class="footer-container">
+        <div class="footer-brand">
+          <div class="brand">
+            <span class="brand-planet-logo" aria-hidden="true">
+              <svg width="42" height="34" viewBox="0 0 64 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <clipPath id="speculum-footer-planet-clip">
+                    <circle cx="27" cy="27" r="17" />
+                  </clipPath>
+                </defs>
+                <g transform="translate(27 27) rotate(-29)">
+                  <path class="planet-ring-back" d="M -26 0 A 26 7.4 0 0 1 26 0 A 26 6.2 0 0 0 -26 0 Z" />
+                </g>
+                <g clip-path="url(#speculum-footer-planet-clip)">
+                  <circle cx="27" cy="27" r="17" fill="#0d1e3a" />
+                  <circle cx="21" cy="21" r="18" fill="#4670ab" />
+                  <circle cx="15.5" cy="15.5" r="13" fill="#7aa1d4" />
+                  <path d="M 10.5 29 C 9.5 20.5 14 12.5 23 10.5 C 26 9.9 29.5 10.1 32 11 C 26 11.4 20 14 16 18.5 C 12.2 22.8 11 26.2 10.5 29 Z" fill="#efeae0" />
+                  <path d="M 28 15 C 31 15 34 16 35 18 C 33.5 19.5 34 21 37 22 C 40 23 43.5 26 44 31 C 44 38 37 44 28 44 C 24 44 21 42 20 39 C 19 36 22 34 24 33 C 26 32 25 29 23 27.5 C 21 26 22 23 24.5 22 C 27 21 26 18 28 15 Z" fill="#0d1e3a" opacity="0.92" />
+                  <path d="M 15 21 C 17 19.5 20 20 21 22 C 21.5 23.5 19.5 25 18 25.5 C 16.5 26 14 23.5 15 21 Z" fill="#13294b" opacity="0.85" />
+                  <path d="M 13 24.5 C 14.5 23.5 16.5 23.5 17.5 24.5 C 16 25.5 14.5 26 13 24.5 Z" fill="#efeae0" opacity="0.92" />
+                  <path d="M 18.5 15.5 C 21 14 24 14 25.5 15 C 23.5 16.2 21 16.5 18.5 15.5 Z" fill="#efeae0" opacity="0.9" />
+                </g>
+                <circle class="planet-rim" cx="27" cy="27" r="16.7" fill="none" stroke-width="0.9" />
+                <g transform="translate(27 27) rotate(-29)">
+                  <path class="planet-ring-front" d="M -26 0 A 26 8.3 0 0 0 26 0 A 26 5.8 0 0 1 -26 0 Z" />
+                </g>
+                <path class="planet-star" d="M 53 2 L 54.4 8.6 L 61 10 L 54.4 11.4 L 53 18 L 51.6 11.4 L 45 10 L 51.6 8.6 Z" />
+              </svg>
+            </span>
+            <span class="brand-wordmark" role="img" aria-label="SPECULUM">
+              <svg width="136" height="15" viewBox="0 0 216 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 19 2 L 7 2 A 4.5 4.5 0 0 0 2.5 6.5 A 4.5 4.5 0 0 0 7 11 L 15 11 A 4.5 4.5 0 0 1 19.5 15.5 A 4.5 4.5 0 0 1 15 20 L 2 20" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="round" />
+                <path d="M 29.5 21.2 L 29.5 2 L 41.5 2 A 4.5 4.5 0 0 1 46 6.5 A 4.5 4.5 0 0 1 41.5 11 L 29.5 11" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="round" />
+                <path d="M 55.5 2 L 72.5 2 M 55.5 11 L 72.5 11 M 55.5 20 L 72.5 20" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" />
+                <path d="M 100 2 L 88.5 2 A 6 6 0 0 0 82.5 8 L 82.5 14 A 6 6 0 0 0 88.5 20 L 100 20" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="round" />
+                <path d="M 109.5 0.8 L 109.5 14 A 6 6 0 0 0 115.5 20 L 122 20 A 6 6 0 0 0 128 14 L 128 0.8" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="round" />
+                <path d="M 138.5 0.8 L 138.5 20 L 155 20" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="miter" />
+                <path d="M 163.5 0.8 L 163.5 14 A 6 6 0 0 0 169.5 20 L 176 20 A 6 6 0 0 0 182 14 L 182 0.8" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="round" />
+                <path d="M 192.5 21.2 L 192.5 2 L 194 2 L 203 17.5 L 212 2 L 213.5 2 L 213.5 21.2" stroke="currentColor" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </div>
+          <p class="footer-desc" data-i18n="footer.desc">
+            Earth analog sites and similarity calculator for lunar bases and Mars exploration.
+          </p>
+          <p class="footer-credits" data-i18n-html="footer.credits">
+            Meteorological and solar datasets provided by <strong>NASA POWER</strong> (Prediction Of Worldwide Energy Resources) 25-year climatologies.
+          </p>
+        </div>
+
+        <div>
+          <div class="footer-title" data-i18n="footer.pagesTitle">Pages</div>
+          <ul class="footer-links">
+            <li><a href="index.html" data-i18n="nav.overview">Overview</a></li>
+            <li><a href="map.html" data-i18n="nav.map">Map</a></li>
+            <li><a href="finder.html" data-i18n="nav.finder">Finder</a></li>
+            <li><a href="methods.html" data-i18n="nav.methods">Methods</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer-title" data-i18n="footer.methodsTitle">Methods</div>
+          <ul class="footer-links">
+            <li><a href="methods.html#scoring" data-i18n="footer.scoring">Scoring method</a></li>
+            <li><a href="methods.html#confidence" data-i18n="footer.confidence">Confidence rules</a></li>
+            <li><a href="methods.html#parameters" data-i18n="footer.parameters">Parameters</a></li>
+            <li><a href="methods.html#limitations" data-i18n="footer.limitations">Known limitations</a></li>
+            <li><a href="methods.html#sources" data-i18n="footer.sources">Sources</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div data-i18n="footer.madeFor">
+          Made for the NASA Space Apps Challenge 2026
+        </div>
+      </div>
+    </footer>
+
+    <!-- Script tags: analog_data.js, i18n.js, then app.js -->
+    <script src="analog_data.js"></script>
+    <script src="i18n.js"></script>
+    <script src="app.js"></script>
+    <script>
+      (function () {
+        const App = window.Speculum || window.AnalogFinder;
+        const I18n = window.SpeculumI18n || null;
+        const data = App && App.getData();
+        if (!data) return;
+
+        function tr(key, vars, fallback) {
+          return I18n ? I18n.t(key, vars) : (fallback || key);
+        }
+
+        const profileSelect = document.getElementById('select-profile');
+        const targetSelect = document.getElementById('select-target');
+        const profileDesc = document.getElementById('profile-description');
+        const targetDesc = document.getElementById('target-description');
+        const stationCheck = document.getElementById('check-station-only');
+        const excludeProtectedCheck = document.getElementById('check-exclude-protected');
+        const excludeAccessCheck = document.getElementById('check-exclude-access');
+        const climateOnlyCheck = document.getElementById('check-climate-only');
+        const advancedSlidersContainer = document.getElementById('advanced-sliders');
+        const advancedCountHint = document.getElementById('advanced-count-hint');
+        const resetWeightsBtn = document.getElementById('btn-reset-weights');
+        const resultsMeta = document.getElementById('results-meta');
+        const resultsList = document.getElementById('ranked-cards-list');
+        const csvBtn = document.getElementById('btn-download-csv');
+
+        let customWeights = {};
+        let lastRunState = { results: [], targetLabel: '', profileName: '', targetId: '', profileId: '' };
+
+        function populateDropdowns(defaultProfile, defaultTarget) {
+          const prevProfile = profileSelect.value || defaultProfile || 'wheeled_rover';
+          const prevTarget = targetSelect.value || defaultTarget || 'mars_equatorial';
+
+          profileSelect.innerHTML = data.profiles.map(p => {
+            const pName = I18n ? I18n.tProfile(p, 'name') : p.name;
+            const pDesc = I18n ? I18n.tProfile(p, 'description') : p.description;
+            const text = `${pName} - ${pDesc}`;
+            return `<option value="${App.escapeHtml(p.id)}">${App.escapeHtml(text)}</option>`;
+          }).join('');
+
+          targetSelect.innerHTML = data.targets.map(t => {
+            const text = I18n ? I18n.tTarget(t, 'label') : (t.label || t.name);
+            return `<option value="${App.escapeHtml(t.id)}">${App.escapeHtml(text)}</option>`;
+          }).join('');
+
+          profileSelect.value = prevProfile;
+          targetSelect.value = prevTarget;
+        }
+
+        function getProfileDefaultWeight(profile, paramId) {
+          if (profile && profile.weights && profile.weights[paramId] !== undefined) {
+            return Number(profile.weights[paramId]);
+          }
+          return 1;
+        }
+
+        function buildSlidersForTargetAndProfile(resetCustom) {
+          const target = data.targets.find(x => x.id === targetSelect.value);
+          const profile = data.profiles.find(x => x.id === profileSelect.value);
+          if (!target || !profile) return;
+
+          if (resetCustom) {
+            customWeights = {};
+          }
+
+          // Active parameters used by the chosen target (silently omit in_data: false)
+          const activeDirections = target.directions.filter(d => {
+            const pDef = data.parameters.find(p => p.id === d.parameter_id);
+            return Boolean(pDef && pDef.in_data);
+          });
+
+          advancedCountHint.textContent = tr(
+            'finder.activeParamsCount',
+            { n: activeDirections.length },
+            `${activeDirections.length} active parameters (0–5)`
+          );
+
+          advancedSlidersContainer.innerHTML = activeDirections.map(d => {
+            const pid = d.parameter_id;
+            const pDef = data.parameters.find(p => p.id === pid);
+            const paramName = pDef ? (I18n ? I18n.tParam(pDef, 'name') : pDef.name) : pid;
+            const dirLabel = d.direction === 'lower'
+              ? tr('finder.lowerCloser', null, 'Lower value is closer')
+              : tr('finder.higherCloser', null, 'Higher value is closer');
+            const val = customWeights[pid] !== undefined
+              ? customWeights[pid]
+              : getProfileDefaultWeight(profile, pid);
+            customWeights[pid] = val;
+
+            const sliderId = `slider-weight-${pid}`;
+            const badgeId = `slider-val-${pid}`;
+
+            return `
+              <div class="slider-row">
+                <div class="slider-header">
+                  <label for="${sliderId}" class="slider-label">
+                    ${App.escapeHtml(paramName)}
+                    <span class="slider-dir">${App.escapeHtml(dirLabel)}</span>
+                  </label>
+                  <span id="${badgeId}" class="slider-value-badge">${val}</span>
+                </div>
+                <input
+                  type="range"
+                  id="${sliderId}"
+                  class="weight-slider"
+                  data-param-id="${App.escapeHtml(pid)}"
+                  min="0"
+                  max="5"
+                  step="1"
+                  value="${val}"
+                />
+                <div class="slider-scale-marks" aria-hidden="true">
+                  <span>${App.escapeHtml(tr('finder.skipZero', null, '0 (skip)'))}</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          advancedSlidersContainer.querySelectorAll('.weight-slider').forEach(input => {
+            input.addEventListener('input', () => {
+              const pid = input.getAttribute('data-param-id');
+              const numVal = Number(input.value);
+              customWeights[pid] = numVal;
+              const badge = document.getElementById(`slider-val-${pid}`);
+              if (badge) badge.textContent = String(numVal);
+              runMatching();
+            });
+          });
+        }
+
+        function updateDescriptions() {
+          const p = data.profiles.find(x => x.id === profileSelect.value);
+          const t = data.targets.find(x => x.id === targetSelect.value);
+          profileDesc.textContent = p ? (I18n ? I18n.tProfile(p, 'description') : p.description) : '';
+          targetDesc.textContent = t ? (I18n ? I18n.tTarget(t, 'description') : t.description) : '';
+        }
+
+        function renderFlagsRow(site) {
+          const flags = site.flags || {};
+          const pills = [];
+
+          if (flags.has_support_station) {
+            pills.push(`<span class="flag-pill flag-pill-station">${App.escapeHtml(tr('finder.flagStationYes', null, 'Support station available'))}</span>`);
+          } else {
+            pills.push(`<span class="flag-pill">${App.escapeHtml(tr('finder.flagStationNo', null, 'No support station'))}</span>`);
+          }
+
+          if (flags.protected_area) {
+            pills.push(`<span class="flag-pill flag-pill-protected">${App.escapeHtml(tr('finder.flagProtected', null, 'Protected area'))}</span>`);
+          }
+
+          if (flags.access_note && String(flags.access_note).trim() !== '') {
+            pills.push(`<span class="flag-pill flag-pill-access">${App.escapeHtml(tr('finder.flagAccessNote', null, 'Access note'))}</span>`);
+          }
+
+          if (site.evidence_level === 'climate_only') {
+            pills.push(`<span class="flag-pill flag-pill-climate">${App.escapeHtml(tr('finder.flagClimateOnly', null, 'Climate-only candidate'))}</span>`);
+          }
+
+          return pills.join('');
+        }
+
+        function renderWarnings(warnings) {
+          if (!warnings || warnings.length === 0) return '';
+          const confTitle = tr('finder.confLevelsTitle', null, 'Confidence levels');
+          return `
+            <div class="warnings-stack" role="note" aria-label="${App.escapeHtml(tr('finder.warningsAria', null, 'Site warnings'))}">
+              ${warnings.map(w => {
+                if (w.type === 'confidence') {
+                  const tip = w.tooltip || tr('warn.lowConfTooltip');
+                  return `
+                    <div class="warning-banner warning-banner-info" title="${App.escapeHtml(tip)}">
+                      <span class="info-tooltip-trigger" tabindex="0" aria-label="${App.escapeHtml(confTitle)}: ${App.escapeHtml(tip)}">
+                        <span class="warning-icon warning-icon-info" aria-hidden="true">i</span>
+                        <span class="info-tooltip-popover" role="tooltip">
+                          <strong>${App.escapeHtml(confTitle)}</strong><br />
+                          ${tr('finder.confPopoverHigh', null, '<strong>High (1.0&times;):</strong> direct ground measurement or field survey.')}<br />
+                          ${tr('finder.confPopoverMed', null, '<strong>Medium (0.8&times;):</strong> NASA POWER climatology matching site setting.')}<br />
+                          ${tr('finder.confPopoverLow', null, '<strong>Low (0.5&times;):</strong> coarse global grid in mountains, islands, polar ice, or mismatched elevation.')}
+                        </span>
+                      </span>
+                      <span>${App.escapeHtml(w.message)}</span>
+                    </div>
+                  `;
+                }
+                const cls = w.type === 'access' ? 'warning-banner warning-banner-access' : 'warning-banner';
+                return `
+                  <div class="${cls}">
+                    <span class="warning-icon" aria-hidden="true">!</span>
+                    <span>${App.escapeHtml(w.message)}</span>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          `;
+        }
+
+        function runMatching() {
+          updateDescriptions();
+
+          const targetId = targetSelect.value;
+          const profileId = profileSelect.value;
+          const onlyStation = stationCheck.checked;
+          const excludeProtected = excludeProtectedCheck.checked;
+          const excludeAccessProblems = excludeAccessCheck.checked;
+          const includeClimateOnly = climateOnlyCheck.checked;
+
+          const { results, nRanked, poolSize, allWeightsZero } = App.rankAnalogSites(
+            data,
+            targetId,
+            profileId,
+            {
+              onlyStation,
+              excludeProtected,
+              excludeAccessProblems,
+              includeClimateOnly,
+              customWeights
+            }
+          );
+
+          const tObj = data.targets.find(x => x.id === targetId);
+          const pObj = data.profiles.find(x => x.id === profileId);
+          const targetLabel = tObj ? (I18n ? I18n.tTarget(tObj, 'label') : (tObj.label || tObj.name)) : targetId;
+          const profileName = pObj ? (I18n ? I18n.tProfile(pObj, 'name') : pObj.name) : profileId;
+
+          lastRunState = { results, targetLabel, profileName, targetId, profileId };
+          csvBtn.disabled = results.length === 0 || Boolean(allWeightsZero);
+
+          if (allWeightsZero) {
+            resultsMeta.innerHTML = tr(
+              'finder.zeroWeightsMeta',
+              { target: App.escapeHtml(targetLabel), profile: App.escapeHtml(profileName) },
+              `<strong>0 active weighted parameters</strong> for <em>${App.escapeHtml(targetLabel)}</em> &bull; <em>${App.escapeHtml(profileName)}</em>.`
+            );
+            resultsList.innerHTML = `
+              <div class="empty-state-box" role="status">
+                <p class="empty-state-title">${App.escapeHtml(tr('finder.zeroWeightsTitle', null, 'All parameter weights are set to 0.'))}</p>
+                <p class="empty-state-desc">
+                  ${App.escapeHtml(tr('finder.zeroWeightsDesc', null, 'Ranking requires at least one active parameter with a weight above 0. Increase a slider in the Advanced section or reset to the default weights for this mission profile.'))}
+                </p>
+                <div class="empty-state-actions">
+                  <button type="button" id="btn-empty-reset-weights" class="btn btn-primary btn-sm">
+                    ${App.escapeHtml(tr('finder.resetWeights', null, 'Reset to profile weights'))}
+                  </button>
+                </div>
+              </div>
+            `;
+            const emptyResetBtn = document.getElementById('btn-empty-reset-weights');
+            if (emptyResetBtn) {
+              emptyResetBtn.addEventListener('click', () => {
+                buildSlidersForTargetAndProfile(true);
+                runMatching();
+              });
+            }
+            return;
+          }
+
+          const topResults = results.slice(0, 10);
+          let showingText;
+          if (nRanked > 10) {
+            showingText = tr('finder.showingTop', { n: nRanked }, `Showing top <strong>10</strong> of <strong>${nRanked}</strong> matching sites`);
+          } else if (nRanked === 1) {
+            showingText = tr('finder.showingCountSingular', { n: nRanked }, `Showing <strong>1</strong> matching site`);
+          } else {
+            showingText = tr('finder.showingCountPlural', { n: nRanked }, `Showing <strong>${nRanked}</strong> matching sites`);
+          }
+
+          resultsMeta.innerHTML = tr(
+            'finder.scoredMeta',
+            {
+              showing: showingText,
+              pool: poolSize,
+              target: App.escapeHtml(targetLabel),
+              profile: App.escapeHtml(profileName)
+            },
+            `${showingText} (scored across <strong>${poolSize}</strong>-site pool) for <em>${App.escapeHtml(targetLabel)}</em> &bull; <em>${App.escapeHtml(profileName)}</em>.`
+          );
+
+          if (topResults.length === 0) {
+            resultsList.innerHTML = `
+              <div class="empty-state-box" role="status">
+                <p class="empty-state-title">${App.escapeHtml(tr('finder.emptyTitle', null, 'No candidate sites match these logistics filters.'))}</p>
+                <p class="empty-state-desc">
+                  ${App.escapeHtml(tr('finder.emptyDesc', { pool: poolSize }, `All ${poolSize} sites in the selected pool were excluded by the active logistics restrictions. Try clearing one or more filters or enabling “Include climate-only sites”.`))}
+                </p>
+                <div class="empty-state-actions">
+                  <button type="button" id="btn-clear-finder-filters" class="btn btn-primary btn-sm">
+                    ${App.escapeHtml(tr('finder.clearFilters', null, 'Clear logistics filters'))}
+                  </button>
+                </div>
+              </div>
+            `;
+            const clearFiltersBtn = document.getElementById('btn-clear-finder-filters');
+            if (clearFiltersBtn) {
+              clearFiltersBtn.addEventListener('click', () => {
+                stationCheck.checked = false;
+                excludeProtectedCheck.checked = false;
+                excludeAccessCheck.checked = false;
+                runMatching();
+              });
+            }
+            return;
+          }
+
+          resultsList.innerHTML = topResults.map((item, idx) => {
+            const site = item.siteDef;
+            const tierClass = item.tier === 'A' ? 'tier-a-card' : 'tier-b-card';
+            const tierBadge = App.renderTierBadge(item.tier);
+            const flagsHtml = renderFlagsRow(site);
+            const warningsHtml = renderWarnings(item.warnings);
+
+            const sourcesHtml = (site.source_ids || []).map(sId => {
+              return App.renderSourceLink(sId, data.sources);
+            }).join(' ');
+
+            const breakdownRows = (item.paramBreakdown || []).map(param => {
+              const confBadge = App.renderConfidenceBadge(param.confidence);
+              const dirArrow = param.direction === 'lower'
+                ? tr('finder.dirLowerArrow', null, '↓ lower is closer')
+                : tr('finder.dirHigherArrow', null, '↑ higher is closer');
+              return `
+                <tr>
+                  <td>
+                    <strong>${App.escapeHtml(param.name)}</strong>
+                    <span style="font-size: 0.72rem; color: var(--text-muted); display: block;">${App.escapeHtml(dirArrow)}</span>
+                  </td>
+                  <td class="mono" style="text-align: right;">${App.escapeHtml(param.valueStr)}</td>
+                  <td class="mono" style="text-align: right; color: var(--accent); font-weight: 600;">${param.percentileScore.toFixed(1)}%</td>
+                  <td class="mono" style="text-align: right;">${param.weight}</td>
+                  <td style="text-align: right;">${confBadge}</td>
+                </tr>
+              `;
+            }).join('');
+
+            const targetBody = tObj ? tObj.body : '';
+            const bodyName = I18n ? I18n.tBody(targetBody) : (targetBody ? targetBody.charAt(0).toUpperCase() + targetBody.slice(1) : '');
+            const hasBodyRef = Boolean(targetBody && data.body_references && data.body_references[targetBody]);
+            const bodyGaps = App.computeAnalogyGaps
+              ? App.computeAnalogyGaps(site, data, hasBodyRef ? [targetBody] : [])
+              : { gravityLine: '', bodies: [] };
+            const bodyGapEntry = bodyGaps.bodies[0] || null;
+            const compactBreaksDownHtml = `
+              <div class="finder-breaks-down">
+                <div class="finder-breaks-down-header">
+                  <span>${App.escapeHtml(tr('finder.breaksDownTitle', { body: bodyName }, `Where the analogy breaks down (${bodyName})`))}</span>
+                  ${bodyGapEntry && bodyGapEntry.sourceId ? App.renderSourceLink(bodyGapEntry.sourceId, data.sources) : ''}
+                </div>
+                ${bodyGapEntry && bodyGapEntry.items.length ? `
+                  <div class="finder-breaks-down-list">
+                    ${bodyGapEntry.items.map(it => `
+                      <div class="finder-breaks-down-row">
+                        <div>
+                          <strong>${App.escapeHtml(it.parameterName)}</strong>
+                          <span class="finder-breaks-down-vals"> &mdash; ${App.escapeHtml(tr('finder.sitePrefix', null, 'Site:'))} <span class="mono">${App.escapeHtml(it.siteValueStr)}</span>, ${App.escapeHtml(tr('finder.refPrefix', null, 'Ref:'))} <span class="mono">${App.escapeHtml(it.refValueShort)}</span></span>
+                        </div>
+                        <div class="finder-breaks-down-gap">${App.escapeHtml(it.gapText)}</div>
+                      </div>
+                    `).join('')}
+                  </div>
+                ` : (targetBody === 'europa'
+                  ? `<p class="finder-breaks-down-gravity" style="margin-bottom: 6px;">${App.escapeHtml(tr('finder.breaksDownEuropaNote', null, 'Reference fact-sheet comparisons cover Moon and Mars; for Europa, Earth glaciers only partially approximate ice-shell cold.'))}</p>`
+                  : `<p class="finder-breaks-down-gravity" style="margin-bottom: 6px;">${App.escapeHtml(tr('map.breaksDownNoMatch', null, 'None of the reference parameters for this body are recorded at this site.'))}</p>`
+                )}
+                ${bodyGaps.gravityLine ? `<p class="finder-breaks-down-gravity">${App.escapeHtml(bodyGaps.gravityLine)}</p>` : ''}
+              </div>
+            `;
+
+            const breakdownSection = item.paramBreakdown.length > 0
+              ? `
+                <details class="breakdown-details">
+                  <summary class="breakdown-summary">
+                    ${App.escapeHtml(tr('finder.breakdownSummary', { n: item.paramBreakdown.length }, `Parameter breakdown (${item.paramBreakdown.length} active factors)`))}
+                  </summary>
+                  <div class="breakdown-table-wrap">
+                    <table class="breakdown-table" aria-label="${App.escapeHtml(tr('finder.colParam', null, 'Parameter breakdown'))}">
+                      <thead>
+                        <tr>
+                          <th scope="col">${App.escapeHtml(tr('finder.colParam', null, 'Parameter'))}</th>
+                          <th scope="col" style="text-align: right;">${App.escapeHtml(tr('finder.colSiteVal', null, 'Site value'))}</th>
+                          <th scope="col" style="text-align: right;">${App.escapeHtml(tr('finder.colSimilarity', null, 'Similarity'))}</th>
+                          <th scope="col" style="text-align: right;">${App.escapeHtml(tr('finder.colWeight', null, 'Weight'))}</th>
+                          <th scope="col" style="text-align: right;">${App.escapeHtml(tr('finder.colConfidence', null, 'Confidence'))}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${breakdownRows}
+                      </tbody>
+                    </table>
+                  </div>
+                  ${compactBreaksDownHtml}
+                </details>
+              `
+              : `
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">
+                  ${App.escapeHtml(tr('finder.noBreakdown', null, 'No weighted target parameters with available site measurements (all active weights may be 0).'))}
+                </div>
+              `;
+
+            const countryStr = I18n ? I18n.tCountry(site.country) : site.country;
+            const regionStr = site.region ? (I18n ? I18n.tRegion(site.region) : site.region) : '';
+            const summaryText = I18n ? I18n.tSiteSummary(site) : (site.summary || '');
+
+            return `
+              <article class="ranked-card ${tierClass}" aria-labelledby="rank-${idx + 1}-title">
+                <div class="ranked-header">
+                  <div class="ranked-rank-wrap">
+                    <span class="ranked-num">#${idx + 1}</span>
+                    <div>
+                      <h3 id="rank-${idx + 1}-title" class="ranked-title">${App.escapeHtml(site.name)}</h3>
+                      <div style="font-size: 0.85rem; color: var(--text-secondary);">
+                        ${App.escapeHtml(countryStr)}${regionStr ? ` &middot; ${App.escapeHtml(regionStr)}` : ''} &middot; ${App.escapeHtml(App.formatEnvironmentType(site.environment_type))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="ranked-score-wrap">
+                    <div class="ranked-score-val">${item.score.toFixed(1)}%</div>
+                    <div class="ranked-coverage">${App.escapeHtml(tr('finder.coverageLabel', null, 'Coverage:'))} <span class="mono">${item.coverage}%</span></div>
+                  </div>
+                </div>
+
+                <div class="ranked-progress-bar" role="progressbar" aria-valuenow="${item.score}" aria-valuemin="0" aria-valuemax="100" aria-label="${App.escapeHtml(tr('finder.colSimilarity', null, 'Similarity score'))}">
+                  <div class="ranked-progress-fill" style="width: ${Math.min(100, Math.max(0, item.score))}%;"></div>
+                </div>
+
+                <div class="ranked-meta-row">
+                  <div>${tierBadge}</div>
+                  <div>
+                    <a href="map.html#${encodeURIComponent(site.id)}" class="btn btn-secondary btn-sm">${App.escapeHtml(tr('finder.showOnMap', null, 'Show on map'))}</a>
+                  </div>
+                </div>
+
+                <div class="flags-badge-row" aria-label="Site logistics flags">
+                  ${flagsHtml}
+                </div>
+
+                ${warningsHtml}
+
+                <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.45;">
+                  ${App.escapeHtml(summaryText)}
+                </p>
+
+                ${breakdownSection}
+
+                <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                  <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                    <span>${App.escapeHtml(tr('finder.sourcesLabel', null, 'Sources:'))}</span>
+                    ${sourcesHtml || App.escapeHtml(tr('finder.noneCited', null, 'None cited'))}
+                  </div>
+                  <div style="font-family: var(--font-mono);">
+                    ${App.escapeHtml(tr('finder.approxCoord', null, 'Approx. coord:'))} <span class="mono">${site.lat.toFixed(2)}&deg;, ${site.lon.toFixed(2)}&deg;</span>
+                  </div>
+                </div>
+              </article>
+            `;
+          }).join('');
+        }
+
+        // Event Listeners
+        profileSelect.addEventListener('change', () => {
+          buildSlidersForTargetAndProfile(true);
+          runMatching();
+        });
+
+        targetSelect.addEventListener('change', () => {
+          buildSlidersForTargetAndProfile(true);
+          runMatching();
+        });
+
+        stationCheck.addEventListener('change', runMatching);
+        excludeProtectedCheck.addEventListener('change', runMatching);
+        excludeAccessCheck.addEventListener('change', runMatching);
+        climateOnlyCheck.addEventListener('change', runMatching);
+
+        resetWeightsBtn.addEventListener('click', () => {
+          buildSlidersForTargetAndProfile(true);
+          runMatching();
+        });
+
+        csvBtn.addEventListener('click', () => {
+          if (!lastRunState.results || lastRunState.results.length === 0) return;
+          const csv = App.formatResultsCsv(
+            lastRunState.results,
+            lastRunState.targetLabel,
+            lastRunState.profileName
+          );
+          const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `speculum_${lastRunState.targetId}_${lastRunState.profileId}.csv`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+        });
+
+        // Live language switch listener (preserve selected options and custom slider weights)
+        document.addEventListener('speculum:langchange', () => {
+          populateDropdowns();
+          buildSlidersForTargetAndProfile(false);
+          runMatching();
+        });
+
+        // Default selection & optional ?site= query parameter from map/overview
+        let initialTarget = 'mars_equatorial';
+        const urlParams = new URLSearchParams(window.location.search);
+        const querySite = urlParams.get('site');
+        if (querySite) {
+          const site = data.sites.find(s => s.id === querySite);
+          if (site) {
+            if (site.evidence_level === 'climate_only') {
+              climateOnlyCheck.checked = true;
+            }
+            if (site.simulated_targets && site.simulated_targets.length > 0) {
+              initialTarget = site.simulated_targets[0];
+            }
+          }
+        }
+
+        populateDropdowns('wheeled_rover', initialTarget);
+        buildSlidersForTargetAndProfile(true);
+        runMatching();
+      })();
+    </script>
+  </body>
+</html>
