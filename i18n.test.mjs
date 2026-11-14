@@ -262,3 +262,15 @@ test('methods.html challenge-coverage table has all 8 dimensions and valid i18n 
   }
 });
 
+test('all HTML pages reference relative favicon.svg for GitHub Pages compatibility', () => {
+  const rootFav = fs.readFileSync(new URL('./favicon.svg', import.meta.url), 'utf8');
+  const pubFav = fs.readFileSync(new URL('./public/favicon.svg', import.meta.url), 'utf8');
+  assert.equal(rootFav, pubFav);
+  assert.match(rootFav, /<svg/);
+
+  for (const page of ['index.html', 'map.html', 'finder.html', 'methods.html']) {
+    const html = fs.readFileSync(new URL(`./${page}`, import.meta.url), 'utf8');
+    assert.ok(html.includes('href="favicon.svg"'), `Missing relative favicon.svg link in ${page}`);
+    assert.equal(html.includes('href="/favicon.svg"'), false, `Found root-absolute /favicon.svg in ${page}`);
+  }
+});

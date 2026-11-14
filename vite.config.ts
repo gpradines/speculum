@@ -26,6 +26,7 @@ function copyRootStaticAssets() {
 
 export default defineConfig(() => {
   return {
+    base: './',
     plugins: [react(), tailwindcss(), copyRootStaticAssets()],
     resolve: {
       alias: {
