@@ -140,12 +140,17 @@ test('extreme statements format properly in all three languages', () => {
   }
 });
 
-test('target labels preserve Europa instead of Europe', () => {
+test('Europa target and body references are completely absent from catalog and i18n', () => {
   const data = loadAnalogData();
-  const europa = data.targets.find(t => t.id === 'europa_ice_shell');
-  assert.ok(europa);
-  i18n.setLang('en', { silent: true });
-  assert.equal(i18n.tTarget(europa, 'label'), 'Europa · ice shell');
+  assert.equal(data.targets.length, 8);
+  assert.equal(data.targets.some(t => t.id === 'europa_ice_shell' || t.body === 'europa'), false);
+  for (const s of data.sites) {
+    assert.equal((s.simulated_targets || []).some(t => t.includes('europa')), false);
+  }
+  for (const lang of i18n.SUPPORTED_LANGS) {
+    assert.equal(i18n.UI[lang]['finder.breaksDownEuropaNote'], undefined);
+  }
+  assert.equal(i18n.tBody('europa'), 'europa');
 });
 
 function loadBrowserRuntime() {
@@ -331,15 +336,16 @@ test('Finder rankAnalogSites splits into Documented analogs (top 5 Tier A) and D
     );
   }
 
-  // Europa has 0 Tier A analogs but 5 discovery candidates when climate-only is enabled
-  const splitEuropa = app.rankAnalogSites(data, 'europa_ice_shell', 'wheeled_rover', {
-    includeClimateOnly: true
+  // Moon South Pole excluding access notes has 0 Tier A analogs while 5 discovery candidates still evaluate cleanly
+  const splitMoonAccess = app.rankAnalogSites(data, 'moon_south_pole', 'wheeled_rover', {
+    includeClimateOnly: true,
+    excludeAccessProblems: true
   });
-  assert.equal(splitEuropa.poolSize, 89);
-  assert.equal(splitEuropa.isDiscoverySplit, true);
-  assert.equal(splitEuropa.documentedAnalogs.length, 0);
-  assert.equal(splitEuropa.discoveryCandidates.length, 5);
-  assert.ok(splitEuropa.discoveryCandidates.every(r => r.siteDef.discovery === true));
+  assert.equal(splitMoonAccess.poolSize, 89);
+  assert.equal(splitMoonAccess.isDiscoverySplit, true);
+  assert.equal(splitMoonAccess.documentedAnalogs.length, 0);
+  assert.equal(splitMoonAccess.discoveryCandidates.length, 5);
+  assert.ok(splitMoonAccess.discoveryCandidates.every(r => r.siteDef.discovery === true));
 });
 
 test('Home, Methods, Map, and Finder pages include required v4 Global scan and discovery markup', () => {

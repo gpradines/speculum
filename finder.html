@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Finder - Speculum</title>
-    <meta name="description" content="Rank Earth analog sites for Moon, Mars, and Europa targets using NASA POWER climate data and mission weights." />
+    <meta name="description" content="Rank Earth analog sites for Moon and Mars targets using NASA POWER climate data and mission weights." />
     <meta property="og:title" content="Finder - Speculum" />
-    <meta property="og:description" content="Rank Earth analog sites for Moon, Mars, and Europa targets using NASA POWER climate data and mission weights." />
+    <meta property="og:description" content="Rank Earth analog sites for Moon and Mars targets using NASA POWER climate data and mission weights." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary" />
     <link rel="icon" type="image/svg+xml" sizes="any" href="favicon.svg" />
@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body data-i18n-page-title="meta.finderTitle" data-i18n-page-desc="meta.finderDesc">
+  <body class="finder-page" data-i18n-page-title="meta.finderTitle" data-i18n-page-desc="meta.finderDesc">
     <a href="#main-content" class="skip-link" data-i18n="skip.link">Skip to main content</a>
 
     <!-- Shared Header with Speculum Blue Orbit Branding -->
@@ -204,19 +204,21 @@
             </div>
           </div>
 
-          <div class="tier-legend-bar">
-            <div>
-              <span class="badge badge-tier-a" style="margin-right: 6px;" data-i18n="finder.tierALabel">Documented analog of this target</span>
-              <span data-i18n="finder.tierADesc">Published analog studies cite this site for this target.</span>
+          <div class="finder-results-scroll">
+            <div class="tier-legend-bar">
+              <div>
+                <span class="badge badge-tier-a" style="margin-right: 6px;" data-i18n="finder.tierALabel">Documented analog of this target</span>
+                <span data-i18n="finder.tierADesc">Published analog studies cite this site for this target.</span>
+              </div>
+              <div>
+                <span class="badge badge-tier-b" style="margin-right: 6px;" data-i18n="finder.tierBLabel">Similar climate, no documented analog</span>
+                <span data-i18n="finder.tierBDesc">Similar climate, with no published study linking this site to this target.</span>
+              </div>
             </div>
-            <div>
-              <span class="badge badge-tier-b" style="margin-right: 6px;" data-i18n="finder.tierBLabel">Similar climate, no documented analog</span>
-              <span data-i18n="finder.tierBDesc">Similar climate, with no published study linking this site to this target.</span>
-            </div>
-          </div>
 
-          <div id="ranked-cards-list">
-            <!-- Rendered dynamically (top 10 results) -->
+            <div id="ranked-cards-list">
+              <!-- Rendered dynamically (top 10 results) -->
+            </div>
           </div>
         </section>
       </div>
@@ -271,7 +273,7 @@
             Earth analog sites and similarity calculator for lunar bases and Mars exploration.
           </p>
           <p class="footer-credits" data-i18n-html="footer.credits">
-            Meteorological and solar datasets provided by <strong>NASA POWER</strong> (Prediction Of Worldwide Energy Resources) 25-year climatologies.
+            Data obtained from the National Aeronautics and Space Administration (NASA) Langley Research Center (LaRC) Prediction of Worldwide Energy Resource (POWER) Project funded through the NASA Earth Science/Applied Science Program. Planetary reference data from the NASA NSSDC Moon and Mars Fact Sheets.
           </p>
         </div>
 
@@ -565,10 +567,7 @@
                     </div>
                   `).join('')}
                 </div>
-              ` : (targetBody === 'europa'
-                ? `<p class="finder-breaks-down-gravity" style="margin-bottom: 6px;">${App.escapeHtml(tr('finder.breaksDownEuropaNote', null, 'Reference fact-sheet comparisons cover Moon and Mars; for Europa, Earth glaciers only partially approximate ice-shell cold.'))}</p>`
-                : `<p class="finder-breaks-down-gravity" style="margin-bottom: 6px;">${App.escapeHtml(tr('map.breaksDownNoMatch', null, 'None of the reference parameters for this body are recorded at this site.'))}</p>`
-              )}
+              ` : `<p class="finder-breaks-down-gravity" style="margin-bottom: 6px;">${App.escapeHtml(tr('map.breaksDownNoMatch', null, 'None of the reference parameters for this body are recorded at this site.'))}</p>`}
               ${bodyGaps.gravityLine ? `<p class="finder-breaks-down-gravity">${App.escapeHtml(bodyGaps.gravityLine)}</p>` : ''}
             </div>
           `;

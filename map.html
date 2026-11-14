@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Map - Speculum</title>
-    <meta name="description" content="Map of Earth analog test sites for Moon, Mars, and Europa exploration with NASA POWER climate data and site limits." />
+    <meta name="description" content="Map of Earth analog test sites for Moon and Mars exploration with NASA POWER climate data and site limits." />
     <meta property="og:title" content="Map - Speculum" />
-    <meta property="og:description" content="Map of Earth analog test sites for Moon, Mars, and Europa exploration with NASA POWER climate data and site limits." />
+    <meta property="og:description" content="Map of Earth analog test sites for Moon and Mars exploration with NASA POWER climate data and site limits." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary" />
     <link rel="icon" type="image/svg+xml" sizes="any" href="favicon.svg" />
@@ -125,18 +125,18 @@
         </div>
         <h1 class="page-title" data-i18n="map.title">Analog sites map</h1>
         <p class="page-desc" data-i18n="map.desc">
-          Global map of Moon, Mars, and Europa testing grounds with NASA POWER climate data and site limits.
+          Global map of Moon and Mars testing grounds with NASA POWER climate data and site limits.
         </p>
       </div>
 
-      <!-- Filter Bar: Target (9 labels), Body (Moon, Mars, Europa), Show climate-only sites -->
+      <!-- Filter Bar: Target (8 labels), Body (Moon, Mars), Show climate-only sites -->
       <section class="map-filter-bar" aria-label="Map filtering controls">
         <div class="map-filter-inputs">
           <div class="filter-item">
             <label for="map-filter-target" class="form-label" style="margin-bottom: 0;" data-i18n="map.filterTarget">Target:</label>
             <select id="map-filter-target" class="form-select" style="min-width: 200px;">
-              <option value="all">All targets (9)</option>
-              <!-- Filled dynamically with the 9 target labels from ANALOG_DATA.targets -->
+              <option value="all">All targets (8)</option>
+              <!-- Filled dynamically with the 8 target labels from ANALOG_DATA.targets -->
             </select>
           </div>
 
@@ -146,7 +146,6 @@
               <option value="all">All bodies</option>
               <option value="moon">Moon</option>
               <option value="mars">Mars</option>
-              <option value="europa">Europa</option>
             </select>
           </div>
 
@@ -289,7 +288,7 @@
             Earth analog sites and similarity calculator for lunar bases and Mars exploration.
           </p>
           <p class="footer-credits" data-i18n-html="footer.credits">
-            Meteorological and solar datasets provided by <strong>NASA POWER</strong> (Prediction Of Worldwide Energy Resources) 25-year climatologies.
+            Data obtained from the National Aeronautics and Space Administration (NASA) Langley Research Center (LaRC) Prediction of Worldwide Energy Resource (POWER) Project funded through the NASA Earth Science/Applied Science Program. Planetary reference data from the NASA NSSDC Moon and Mars Fact Sheets.
           </p>
         </div>
 
@@ -381,11 +380,9 @@
           const bodyAllOpt = bodySelect.querySelector('option[value="all"]');
           const bodyMoonOpt = bodySelect.querySelector('option[value="moon"]');
           const bodyMarsOpt = bodySelect.querySelector('option[value="mars"]');
-          const bodyEuropaOpt = bodySelect.querySelector('option[value="europa"]');
           if (bodyAllOpt) bodyAllOpt.textContent = tr('map.allBodies', null, 'All bodies');
           if (bodyMoonOpt) bodyMoonOpt.textContent = I18n ? I18n.tBody('moon') : 'Moon';
           if (bodyMarsOpt) bodyMarsOpt.textContent = I18n ? I18n.tBody('mars') : 'Mars';
-          if (bodyEuropaOpt) bodyEuropaOpt.textContent = I18n ? I18n.tBody('europa') : 'Europa';
           bodySelect.value = prevBody;
 
           if (legendDocEl) {
@@ -534,7 +531,7 @@
               }
             }
 
-            // Body check (Moon, Mars, Europa)
+            // Body check (Moon, Mars)
             if (selectedBody !== 'all') {
               const matchesBody = (site.simulated_targets || []).some(tId => {
                 const targetDef = data.targets.find(t => t.id === tId);

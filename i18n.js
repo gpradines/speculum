@@ -91,8 +91,8 @@
       'lang.buttonAria': 'Language: English. Select language',
       'lang.menuAria': 'Select language',
       'footer.desc': 'Earth analog sites and similarity calculator for lunar bases and Mars exploration.',
-      'footer.credits': 'Meteorological and solar datasets provided by <strong>NASA POWER</strong> (Prediction Of Worldwide Energy Resources) 25-year climatologies.',
-      'footer.creditsYears': 'Meteorological and solar datasets provided by <strong>NASA POWER</strong> (Prediction Of Worldwide Energy Resources) 25-year climatologies (2001–2025); planetary reference data from the <strong>NASA NSSDC Moon and Mars Fact Sheets</strong>.',
+      'footer.credits': 'Data obtained from the National Aeronautics and Space Administration (NASA) Langley Research Center (LaRC) Prediction of Worldwide Energy Resource (POWER) Project funded through the NASA Earth Science/Applied Science Program. Planetary reference data from the NASA NSSDC Moon and Mars Fact Sheets.',
+      'footer.creditsYears': 'Data obtained from the National Aeronautics and Space Administration (NASA) Langley Research Center (LaRC) Prediction of Worldwide Energy Resource (POWER) Project funded through the NASA Earth Science/Applied Science Program. Planetary reference data from the NASA NSSDC Moon and Mars Fact Sheets.',
       'footer.pagesTitle': 'Pages',
       'footer.methodsTitle': 'Methods',
       'footer.scoring': 'Scoring method',
@@ -128,7 +128,7 @@
       'index.step1Link': 'Open map →',
       'index.step2Num': 'Step 02',
       'index.step2Title': 'Describe your project',
-      'index.step2Desc': 'Choose what hardware or discipline you are testing, select the lunar, Martian, or Europan target environment to simulate, set logistics filters, and optionally adjust parameter weights.',
+      'index.step2Desc': 'Choose what hardware or discipline you are testing, select the lunar or Martian target environment to simulate, set logistics filters, and optionally adjust parameter weights.',
       'index.step2Link': 'Open finder →',
       'index.step3Num': 'Step 03',
       'index.step3Title': 'Get a ranked list',
@@ -136,7 +136,7 @@
       'index.step3Link': 'Rank sites →',
       'index.whatTitle': 'What this tool can and cannot tell you',
       'index.whatCanTitle': 'What it tells you',
-      'index.whatCan1': 'Which terrestrial sites rank closest to each other along the climate directions relevant to a Moon, Mars, or Europa target.',
+      'index.whatCan1': 'Which terrestrial sites rank closest to each other along the climate directions relevant to a Moon or Mars target.',
       'index.whatCan2': 'Climate baselines sourced from 25-year NASA POWER grid data (2001–2025) and published literature, each tagged with explicit <strong>high</strong>, <strong>medium</strong>, or <strong>low</strong> confidence levels.',
       'index.whatCan3': 'Whether a site has published analog literature for your target, missing-data coverage warnings, or logistics and permit constraints.',
       'index.whatCannotTitle': 'What it cannot tell you',
@@ -152,10 +152,10 @@
 
       // Map page
       'meta.mapTitle': 'Map - Speculum',
-      'meta.mapDesc': 'Map of Earth analog test sites for Moon, Mars, and Europa exploration with NASA POWER climate data and site limits.',
+      'meta.mapDesc': 'Map of Earth analog test sites for Moon and Mars exploration with NASA POWER climate data and site limits.',
       'map.kicker': 'Global map',
       'map.title': 'Analog sites map',
-      'map.desc': 'Global map of Moon, Mars, and Europa testing grounds with NASA POWER climate data and site limits.',
+      'map.desc': 'Global map of Moon and Mars testing grounds with NASA POWER climate data and site limits.',
       'map.filterTarget': 'Target:',
       'map.allTargets': 'All targets ({n})',
       'map.filterBody': 'Body:',
@@ -230,7 +230,7 @@
 
       // Finder page
       'meta.finderTitle': 'Finder - Speculum',
-      'meta.finderDesc': 'Rank Earth analog sites for Moon, Mars, and Europa targets using NASA POWER climate data and mission weights.',
+      'meta.finderDesc': 'Rank Earth analog sites for Moon and Mars targets using NASA POWER climate data and mission weights.',
       'finder.kicker': 'Site ranking calculator',
       'finder.title': 'Analog finder',
       'finder.desc': 'Choose what you are testing and the target environment to rank Earth sites by directional percentiles and mission weights.',
@@ -291,7 +291,6 @@
       'finder.colConfidence': 'Confidence',
       'finder.noBreakdown': 'No weighted target parameters with available site measurements (all active weights may be 0).',
       'finder.breaksDownTitle': 'Where the analogy breaks down ({body})',
-      'finder.breaksDownEuropaNote': 'Reference fact-sheet comparisons cover Moon and Mars; for Europa, Earth glaciers only partially approximate ice-shell cold.',
       'finder.refPrefix': 'Ref:',
       'finder.sitePrefix': 'Site:',
       'finder.sourcesLabel': 'Sources:',
@@ -447,8 +446,8 @@
       'lang.buttonAria': 'Idioma: Español. Seleccionar idioma',
       'lang.menuAria': 'Seleccionar idioma',
       'footer.desc': 'Sitios análogos terrestres y calculadora de similitud para bases lunares y exploración de Marte.',
-      'footer.credits': 'Conjuntos de datos meteorológicos y solares proporcionados por <strong>NASA POWER</strong> (Prediction Of Worldwide Energy Resources), climatologías de 25 años.',
-      'footer.creditsYears': 'Conjuntos de datos meteorológicos y solares proporcionados por <strong>NASA POWER</strong> (Prediction Of Worldwide Energy Resources), climatologías de 25 años (2001–2025); datos planetarios de referencia de las <strong>Hojas de Datos de la Luna y Marte del NASA NSSDC</strong>.',
+      'footer.credits': 'Datos obtenidos del Proyecto Prediction of Worldwide Energy Resource (POWER) del Centro de Investigación Langley (LaRC) de la Administración Nacional de Aeronáutica y el Espacio (NASA), financiado a través del Programa de Ciencias de la Tierra/Ciencia Aplicada de la NASA. Datos planetarios de referencia de las Hojas de Datos de la Luna y Marte del NASA NSSDC.',
+      'footer.creditsYears': 'Datos obtenidos del Proyecto Prediction of Worldwide Energy Resource (POWER) del Centro de Investigación Langley (LaRC) de la Administración Nacional de Aeronáutica y el Espacio (NASA), financiado a través del Programa de Ciencias de la Tierra/Ciencia Aplicada de la NASA. Datos planetarios de referencia de las Hojas de Datos de la Luna y Marte del NASA NSSDC.',
       'footer.pagesTitle': 'Páginas',
       'footer.methodsTitle': 'Métodos',
       'footer.scoring': 'Método de puntuación',
@@ -483,7 +482,7 @@
       'index.step1Link': 'Abrir mapa →',
       'index.step2Num': 'Paso 02',
       'index.step2Title': 'Describe tu proyecto',
-      'index.step2Desc': 'Elige qué equipo o disciplina estás probando, selecciona el entorno objetivo lunar, marciano o de Europa que deseas simular, define filtros logísticos y ajusta opcionalmente los pesos de los parámetros.',
+      'index.step2Desc': 'Elige qué equipo o disciplina estás probando, selecciona el entorno objetivo lunar o marciano que deseas simular, define filtros logísticos y ajusta opcionalmente los pesos de los parámetros.',
       'index.step2Link': 'Abrir buscador →',
       'index.step3Num': 'Paso 03',
       'index.step3Title': 'Obtén una lista ordenada',
@@ -491,7 +490,7 @@
       'index.step3Link': 'Clasificar sitios →',
       'index.whatTitle': 'Qué puede y qué no puede decirte esta herramienta',
       'index.whatCanTitle': 'Qué te dice',
-      'index.whatCan1': 'Qué sitios terrestres se posicionan más cerca entre sí según las direcciones climáticas relevantes para un objetivo de la Luna, Marte o Europa.',
+      'index.whatCan1': 'Qué sitios terrestres se posicionan más cerca entre sí según las direcciones climáticas relevantes para un objetivo de la Luna o Marte.',
       'index.whatCan2': 'Líneas base climáticas obtenidas de cuadrículas de NASA POWER de 25 años (2001–2025) y literatura publicada, cada una etiquetada con niveles explícitos de confianza <strong>alta</strong>, <strong>media</strong> o <strong>baja</strong>.',
       'index.whatCan3': 'Si un sitio cuenta con literatura publicada como análogo para tu objetivo, advertencias de cobertura por datos faltantes o restricciones logísticas y de permisos.',
       'index.whatCannotTitle': 'Qué no puede decirte',
@@ -506,10 +505,10 @@
       'index.teamMembersLabel': 'Integrantes:',
 
       'meta.mapTitle': 'Mapa - Speculum',
-      'meta.mapDesc': 'Mapa de sitios de prueba análogos terrestres para la exploración de la Luna, Marte y Europa con datos climáticos de NASA POWER y límites del sitio.',
+      'meta.mapDesc': 'Mapa de sitios de prueba análogos terrestres para la exploración de la Luna y Marte con datos climáticos de NASA POWER y límites del sitio.',
       'map.kicker': 'Mapa global',
       'map.title': 'Mapa de sitios análogos',
-      'map.desc': 'Mapa global de terrenos de prueba para la Luna, Marte y Europa con datos climáticos de NASA POWER y límites de cada sitio.',
+      'map.desc': 'Mapa global de terrenos de prueba para la Luna y Marte con datos climáticos de NASA POWER y límites de cada sitio.',
       'map.filterTarget': 'Objetivo:',
       'map.allTargets': 'Todos los objetivos ({n})',
       'map.filterBody': 'Cuerpo:',
@@ -583,7 +582,7 @@
       'map.openInFinder': 'Abrir en el buscador →',
 
       'meta.finderTitle': 'Buscador - Speculum',
-      'meta.finderDesc': 'Clasifica sitios análogos terrestres para objetivos de la Luna, Marte y Europa usando datos climáticos de NASA POWER y pesos de misión.',
+      'meta.finderDesc': 'Clasifica sitios análogos terrestres para objetivos de la Luna y Marte usando datos climáticos de NASA POWER y pesos de misión.',
       'finder.kicker': 'Calculadora de clasificación de sitios',
       'finder.title': 'Buscador de análogos',
       'finder.desc': 'Elige qué estás probando y el entorno objetivo para clasificar sitios terrestres según percentiles direccionales y pesos de misión.',
@@ -644,7 +643,6 @@
       'finder.colConfidence': 'Confianza',
       'finder.noBreakdown': 'No hay parámetros ponderados del objetivo con mediciones disponibles en este sitio (todos los pesos activos podrían estar en 0).',
       'finder.breaksDownTitle': 'Dónde falla la analogía ({body})',
-      'finder.breaksDownEuropaNote': 'Las referencias de hojas de datos cubren la Luna y Marte; para Europa, los glaciares terrestres solo aproximan parcialmente el frío de la corteza helada.',
       'finder.refPrefix': 'Ref.:',
       'finder.sitePrefix': 'Sitio:',
       'finder.sourcesLabel': 'Fuentes:',
@@ -797,8 +795,8 @@
       'lang.buttonAria': 'Idioma: Português (Brasil). Selecionar idioma',
       'lang.menuAria': 'Selecionar idioma',
       'footer.desc': 'Locais análogos terrestres e calculadora de similaridade para bases lunares e exploração de Marte.',
-      'footer.credits': 'Conjuntos de dados meteorológicos e solares fornecidos pela <strong>NASA POWER</strong> (Prediction Of Worldwide Energy Resources), climatologias de 25 anos.',
-      'footer.creditsYears': 'Conjuntos de dados meteorológicos e solares fornecidos pela <strong>NASA POWER</strong> (Prediction Of Worldwide Energy Resources), climatologias de 25 anos (2001–2025); dados planetários de referência das <strong>Fichas Técnicas da Lua e de Marte do NASA NSSDC</strong>.',
+      'footer.credits': 'Dados obtidos do Projeto Prediction of Worldwide Energy Resource (POWER) do Centro de Pesquisa Langley (LaRC) da Administração Nacional da Aeronáutica e Espaço (NASA), financiado pelo Programa de Ciências da Terra/Ciência Aplicada da NASA. Dados planetários de referência das Fichas Técnicas da Lua e de Marte do NASA NSSDC.',
+      'footer.creditsYears': 'Dados obtidos do Projeto Prediction of Worldwide Energy Resource (POWER) do Centro de Pesquisa Langley (LaRC) da Administração Nacional da Aeronáutica e Espaço (NASA), financiado pelo Programa de Ciências da Terra/Ciência Aplicada da NASA. Dados planetários de referência das Fichas Técnicas da Lua e de Marte do NASA NSSDC.',
       'footer.pagesTitle': 'Páginas',
       'footer.methodsTitle': 'Métodos',
       'footer.scoring': 'Método de pontuação',
@@ -833,7 +831,7 @@
       'index.step1Link': 'Abrir mapa →',
       'index.step2Num': 'Passo 02',
       'index.step2Title': 'Descreva seu projeto',
-      'index.step2Desc': 'Escolha qual equipamento ou área está testando, selecione o ambiente-alvo lunar, marciano ou de Europa a simular, defina filtros logísticos e ajuste opcionalmente os pesos dos parâmetros.',
+      'index.step2Desc': 'Escolha qual equipamento ou área está testando, selecione o ambiente-alvo lunar ou marciano a simular, defina filtros logísticos e ajuste opcionalmente os pesos dos parâmetros.',
       'index.step2Link': 'Abrir buscador →',
       'index.step3Num': 'Passo 03',
       'index.step3Title': 'Obtenha uma lista ranqueada',
@@ -841,7 +839,7 @@
       'index.step3Link': 'Ranquear locais →',
       'index.whatTitle': 'O que esta ferramenta pode e não pode dizer',
       'index.whatCanTitle': 'O que ela informa',
-      'index.whatCan1': 'Quais locais terrestres ficam mais próximos entre si nas direções climáticas relevantes para um alvo da Lua, de Marte ou de Europa.',
+      'index.whatCan1': 'Quais locais terrestres ficam mais próximos entre si nas direções climáticas relevantes para um alvo da Lua ou de Marte.',
       'index.whatCan2': 'Linhas de base climáticas vindas de grades da NASA POWER de 25 anos (2001–2025) e literatura publicada, cada uma marcada com níveis explícitos de confiança <strong>alta</strong>, <strong>média</strong> ou <strong>baixa</strong>.',
       'index.whatCan3': 'Se um local possui literatura publicada de análogo para o seu alvo, alertas de cobertura por dados ausentes ou restrições logísticas e de licenças.',
       'index.whatCannotTitle': 'O que ela não pode informar',
@@ -856,10 +854,10 @@
       'index.teamMembersLabel': 'Membros:',
 
       'meta.mapTitle': 'Mapa - Speculum',
-      'meta.mapDesc': 'Mapa de locais de teste análogos terrestres para exploração da Lua, Marte e Europa com dados climáticos da NASA POWER e limites de cada local.',
+      'meta.mapDesc': 'Mapa de locais de teste análogos terrestres para exploração da Lua e Marte com dados climáticos da NASA POWER e limites de cada local.',
       'map.kicker': 'Mapa global',
       'map.title': 'Mapa de locais análogos',
-      'map.desc': 'Mapa global de campos de teste para a Lua, Marte e Europa com dados climáticos da NASA POWER e limites de cada local.',
+      'map.desc': 'Mapa global de campos de teste para a Lua e Marte com dados climáticos da NASA POWER e limites de cada local.',
       'map.filterTarget': 'Alvo:',
       'map.allTargets': 'Todos os alvos ({n})',
       'map.filterBody': 'Corpo:',
@@ -933,7 +931,7 @@
       'map.openInFinder': 'Abrir no buscador →',
 
       'meta.finderTitle': 'Buscador - Speculum',
-      'meta.finderDesc': 'Ranqueie locais análogos terrestres para alvos da Lua, Marte e Europa usando dados climáticos da NASA POWER e pesos de missão.',
+      'meta.finderDesc': 'Ranqueie locais análogos terrestres para alvos da Lua e Marte usando dados climáticos da NASA POWER e pesos de missão.',
       'finder.kicker': 'Calculadora de classificação de locais',
       'finder.title': 'Buscador de análogos',
       'finder.desc': 'Escolha o que você está testando e o ambiente-alvo para ranquear locais terrestres por percentis direcionais e pesos de missão.',
@@ -994,7 +992,6 @@
       'finder.colConfidence': 'Confiança',
       'finder.noBreakdown': 'Nenhum parâmetro ponderado do alvo com medições disponíveis neste local (todos os pesos ativos podem estar em 0).',
       'finder.breaksDownTitle': 'Onde a analogia falha ({body})',
-      'finder.breaksDownEuropaNote': 'As referências das fichas técnicas cobrem a Lua e Marte; para Europa, os glaciares terrestres aproximam apenas parcialmente o frio da camada de gelo.',
       'finder.refPrefix': 'Ref.:',
       'finder.sitePrefix': 'Local:',
       'finder.sourcesLabel': 'Fontes:',
@@ -1136,9 +1133,9 @@
 
   // --- DATA DICTIONARIES (analog_data.js entities) ---
   const BODIES = {
-    en: { moon: 'Moon', mars: 'Mars', europa: 'Europa' },
-    es: { moon: 'Luna', mars: 'Marte', europa: 'Europa' },
-    'pt-BR': { moon: 'Lua', mars: 'Marte', europa: 'Europa' }
+    en: { moon: 'Moon', mars: 'Mars' },
+    es: { moon: 'Luna', mars: 'Marte' },
+    'pt-BR': { moon: 'Lua', mars: 'Marte' }
   };
 
   const GROUPS = {
@@ -1266,11 +1263,6 @@
         name: 'Marte - cuevas y tubos de lava',
         label: 'Marte · cuevas y tubos de lava',
         description: 'Cavidades volcánicas como posible refugio y objetivo astrobiológico.'
-      },
-      europa_ice_shell: {
-        name: 'Europa - corteza de hielo',
-        label: 'Europa · corteza de hielo',
-        description: 'Superficie helada, frío extremo; análogos glaciares y de hielo marino.'
       }
     },
     'pt-BR': {
@@ -1313,11 +1305,6 @@
         name: 'Marte - cavernas e tubos de lava',
         label: 'Marte · cavernas e tubos de lava',
         description: 'Cavidades vulcânicas como possível abrigo e alvo astrobiológico.'
-      },
-      europa_ice_shell: {
-        name: 'Europa - camada de gelo',
-        label: 'Europa · camada de gelo',
-        description: 'Superfície de gelo, frio extremo; análogos glaciais e de gelo marinho.'
       }
     }
   };
